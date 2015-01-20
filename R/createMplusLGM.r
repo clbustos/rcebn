@@ -1,5 +1,5 @@
 #' Create a Mplus definition for a (multilevel) LGM
-#' Requires the clustering on parameter @cluster
+#' Requires the clustering on parameter cluster
 #' And the different variables on dataframes of the same rank
 #' @param data.frame
 #' @param list of time.series

@@ -32,7 +32,7 @@ generateDB<-function(db, def, v='var',ignore=c()) {
     # print(ind)
     #print(v.act)
     if(length(v.act)>0) {
-      print(v.act)
+      #print(v.act)
       n.vars<-length(v.act)
       out.db[[ escalas[i] ]]<-db[,v.act]
      # print(str(db[,v.act]))

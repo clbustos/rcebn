@@ -1,13 +1,11 @@
-#' Create a Mplus definition for a (multilevel) LGM
-#' Requires the clustering on parameter @cluster
-#' And the different variables on dataframes of the same rank
+#' Create a Mplus definition for Latent Class Analysis
 #' @param data.frame
-#' @param list of time.series
-#' @param variable for clustering
+#' @param list of variables to perform latent class. By default: all
+#' @param variable for regression on latent class. By default: none
 #' @param basename for files
 #' @export
 #' @import stringr
-createMplusLGM<-function(x, series, pred.within, pred.between, clusters, model.within=c("i","s"), model.between=c("ib","sb"), bfile=NULL) {
+createMplusLCA<-function(x, classes, lc.vars=colnames(x), predictors, bfile=NULL) {
   require("stringr")
   to.file<-!is.null(bfile)
   clean.name<-function(x) {
@@ -15,17 +13,40 @@ createMplusLGM<-function(x, series, pred.within, pred.between, clusters, model.w
   }
 
   data.files<-paste0(bfile,".dat")
-  inp.files<-paste0(bfile,".inp")
-  full.db<-do.call(cbind,x)
+  
+  if (to.file) {
+    inp.files<-paste0(bfile,".inp")
+  } else {
+    inp.files<-NULL
+  }
+  
+  lc.varnames<-clean.name(lc.vars)
+  df.pred<-NULL
+  categorical<-lc.vars
+  usevar<-colnames(x)
+  if(!missing(predictors)) {
+    if(!is.null(predictors$nominal)) {
+      usevar<-colnames(x)[! (colnames(x) %in% predictors$nominal)]
+      for(i in predictors$nominal) {
+        
+        x[[i]]<-as.numeric(x[,i])
+      }
+    }
+    df.pred<-lapply(predictors,clean.name)
+    categorical<-c(categorical,predictors$categorical)
+
+  }
+  categorical.varnames<-clean.name(categorical)
+  total.pred<-c(df.pred$numerical,df.pred$categorical)
   
   
-  n.fac<-names(x)
-  varnames<-clean.name(colnames(full.db))
+  varnames<-clean.name(colnames(x))
+  
   
   if(to.file) {
-    write.table(full.db,file=data.files,na="-99",row.names=FALSE,col.names=FALSE)
+    write.table(x,file=data.files,na="-99",row.names=FALSE,col.names=FALSE)
   } else {
-    print(head(full.db))
+    print(head(x))
   }
   if(to.file) {
     cat.p<-function(t) {
@@ -36,81 +57,60 @@ createMplusLGM<-function(x, series, pred.within, pred.between, clusters, model.w
       cat(paste0(t,"\n"))
     }
   }
-  
-  cat("TITLE:  Latent growth model\n",file=inp.files)
+  if(to.file) {
+  cat("TITLE:  Latent class analysis\n",file=inp.files)
+  } else {
+  cat("TITLE:  Latent class analysis\n")
+  }
   cat.p("DATA:")
   cat.p(paste0("FILE IS '",data.files,"';"))
 
+  if(!missing(predictors) & !is.null(predictors$nominal)) {
+     cat.p("DEFINE:") 
+     
+      for(v in predictors$nominal) {
+        l.v<-max(x[,v],na.rm=T)
+        for(j in 1:l.v){
+          cn<-clean.name(v)
+          cat.p(paste0(cn,j," = ",cn," ==",j,";"))
+          if(j>1) {
+            total.pred<-c(total.pred,paste0(cn,j))
+            usevar<-c(usevar,paste0(cn,j))
+          }
+        }
+      }
+  }
+  print(usevar)
+  
+
   cat.p("VARIABLE:")
   cat.p( str_wrap(paste0("NAMES ARE ",paste0(varnames,collapse=" "),";"),80) )
-  cat.p(str_wrap(paste0("USEVARIABLES ARE  ",paste0(varnames,collapse=" "),";"),80))
-  if(!missing(clusters)) {
-    if(!missing(pred.within)) cat.p(paste0("WITHIN ARE ",paste0(clean.name(pred.within),collapse=" "),";"))
-    if(!missing(pred.between)) cat.p(paste0("BETWEEN ARE ",paste0(clean.name(pred.between),collapse=" "),";"))
-    
-  }
+  cat.p(str_wrap(paste0("USEVARIABLES ARE  ",paste0(clean.name(usevar),collapse=" "),";"),80))
+  cat.p(str_wrap(paste0("CATEGORICAL ARE  ",paste0(categorical.varnames,collapse=" "),";"),80)) 
+  
+  cat.p(paste0("CLASSES = C(",classes,");")) 
   cat.p("MISSING ARE ALL (-99);") 
-  if(!missing(clusters)) {
-    cat.p(paste0("CLUSTER = ",clusters))
-    cat.p("ANALYSIS:
-    TYPE=TWOLEVEL")
-  }
-  if(F) {
-  cat.p("ANALYSIS:
-  TYPE IS GENERAL ;
-  INTEGRATION = MONTECARLO;
-  ESTIMATOR IS MLR;
-  ITERATIONS = 1000;
-  CONVERGENCE = 0.00005;")
-  }
-  cat.p("MODEL:")
-  # Within section
-  if(!missing(clusters)) {
-    cat.p("%WITHIN%")
-  }
-  for(j in 1:length(series)) {
-    
-    n.serie  <-names(series)[j]
-    var.serie<-clean.name(colnames(x[,series[[j]]]))
-    int.slope<-paste0(clean.name(n.serie), model.within,collapse=" ")
-    times<-seq(0,length(var.serie)-1)
-    time.serie<-paste(var.serie,times,sep="@",collapse=" ")
-    cat.p(paste0( int.slope , " | ", time.serie,";"))
-    # Constraint on variance
-    cat.p(paste0(paste0(var.serie,collapse=" ")," (",j,");"))
-    
-    if(!missing(pred.within)) {
-        cat.p(paste0(int.slope," ON ", clean.name(pred.within), ";"))
-    }
-  }
   
   
-  if(!missing(clusters)) {
-    cat.p("%BETWEEN%")
-    for(j in 1:length(series)) {
-      n.serie  <-names(series)[j]
-      var.serie<-clean.name(colnames(x[,series[[j]]]))
-      int.slope<-paste0(clean.name(n.serie), model.between,collapse=" ")
-      times<-seq(0,length(var.serie)-1)
-      time.serie<-paste(var.serie,times,sep="@",collapse=" ")
-      cat.p(paste0( int.slope , " | ", time.serie,";"))
-      # Constraint in mean
-      
-      
-
-      # Constraint on variance
-      cat.p(paste0(var.serie,"@0",";"))
-      #cat.p(paste0("[",var.serie,"]",";"))
-      
-      
-      if(!missing(pred.between)) {
-        cat.p(paste0(int.slope," ON ", clean.name(pred.between), ";"))
-      }
-    }
+  cat.p("ANALYSIS:")
+  cat.p("TYPE=MIXTURE;")
+  cat.p("STARTS = 50 20;")
+  cat.p("!K-1STARTS = 10 2;")
+  cat.p("!OPTSEED=0;")
+  cat.p("LRTSTARTS = 50 20 50 50;")
+  
+  
+  if(!missing(predictors)) {
+    cat.p("MODEL:")
+    cat.p("%OVERALL%")
+    cat.p(str_wrap(paste0("c on ",paste0(total.pred,collapse=" "),";"),80))
   }
-  
-  
-  
-cat.p("OUTPUT:  SAMPSTAT STANDARDIZED TECH1 TECH4 MODINDICES(ALL);")
+cat.p("SAVEDATA:")
+  cat.p(paste0("FILE IS ",bfile,".txt;"))
+  cat.p(paste0("SAVE IS CPROB;"))
+  cat.p(paste0("FORMAT IS FREE;"))
+cat.p("!OUTPUT:  ;")
+cat.p("OUTPUT: TECH11 ;")
+cat.p("!OUTPUT: TECH11 TECH14 ;")
 
 }
