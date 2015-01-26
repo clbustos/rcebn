@@ -7,7 +7,7 @@
 #' @import foreign
 #' @import compare
 #' @import stringr
-analisisDiferencias<-function(x1,x2,vars.rel=colnames(x1),vars.report=x1[,1]) {
+compareDatabases<-function(x1,x2,vars.rel=colnames(x1),vars.report=x1[,1]) {
   n<-nrow(x1)
   reporte<-list()
   for(i in 1:ncol(vars.report)) {
