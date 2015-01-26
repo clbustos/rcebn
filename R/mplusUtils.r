@@ -8,7 +8,7 @@ parlistMplus<-function(at,l) {
 }
 
 #' variable list
-#' you could set as free (*), with a fixed value (@<X>) or related to a variable ( (label) )
+#' you could set as free (*), with a fixed value (<X>) or related to a variable ( (label) )
 #' they could be part of the same definition, or separated (using ;)
 #' 
 
