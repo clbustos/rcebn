@@ -4,7 +4,7 @@
 #' @param basename for files
 #' @export
 #' @import stringr
-createMplusCFA<-function(x,groups,directory=".",bfile=NULL,invariance_factors=F,title="CFA Analysis",difftest=NULL) {
+createMplusCFA<-function(x,groups,directory=".",bfile=NULL, invariance_factors=F,title="CFA Analysis",difftest=NULL) {
   require("stringr")
   
   data.files<-paste0(directory,"/",bfile,".dat")
@@ -35,7 +35,7 @@ createMplusCFA<-function(x,groups,directory=".",bfile=NULL,invariance_factors=F,
     levels.gr<-length(unique(groups))
   }
   
-  write.table(full.db,file=data.files,na="-99",row.names=FALSE,col.names=FALSE)
+  writeDataFileMplus(full.db,data.files)
 
   
   nom.facs<-cleanMplusName(n.fac)
@@ -90,7 +90,7 @@ createMplusCFA<-function(x,groups,directory=".",bfile=NULL,invariance_factors=F,
     for(j in 1:length(n.fac)) {
       dd<-x[[ n.fac[j] ]]
       for(k in 1:ncol(dd)) {
-        levels.var<-length(unique(dd[,k]))-1
+        levels.var<-length(unique(na.omit(dd[,k])))-1
         n.x<-cleanMplusName(colnames(dd)[k])
         cat.p(thresholdMplus(n.x,dd[,k], type=paste0("t",j,"i",k,"l",1:levels.var) ))
       }
@@ -107,10 +107,10 @@ createMplusCFA<-function(x,groups,directory=".",bfile=NULL,invariance_factors=F,
       for(j in 1:length(n.fac)) {
         dd<-x[[ n.fac[j] ]]
         for(k in 1:ncol(dd)) {
-          levels.var<-length(unique(dd[,k]))-1
+          levels.var<-length(unique(na.omit(dd[,k])))-1
           n.x<-cleanMplusName(colnames(dd)[k])
           top.l<- 1+as.numeric(k==1)
-          cat.p(thresholdMplus(n.x,dd[,k], type=c(paste0("t",j,"i",k,"l ",1:top.l),rep("",levels.var-top.l) )))
+          cat.p(thresholdMplus(n.x,dd[,k], type=c(paste0("t",j,"i",k,"l",1:top.l),rep("",levels.var-top.l) )))
         }
       }
       # varianza de los residuales

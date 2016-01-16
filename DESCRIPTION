@@ -1,11 +1,13 @@
 Package: cebn
-Title: What the package does (short line)
+Title: Multiple methods for psychologist
 Version: 0.1
 Authors@R: c(person("Claudio Bustos", "Developer", role = c("aut", "cre"),
     email = "clbustos_at_gmail_dot_com"))
 Maintainer: Claudio Bustos <clbustos@gmail.com>
-Description: Miscellaneous stuff useful for me on R
+Description: Miscellaneous stuff useful for psychology
 Depends:
     R (>= 3.1.1)
+Imports:
+    lme4, compare, foreign, stringr
 License: GPL-2
 LazyData: true

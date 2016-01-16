@@ -1,8 +1,15 @@
-#' Clean a name for Mplus
+#' Clean names to acceptable for Mplus
+#' @param x string
+#' @param a clean string
 cleanMplusName<-function(x) {
   str_replace_all(x,"[^a-zA-Z0-9]","")
 }
 
+#' Generate a 'at' ARE 'X1,X2'
+#' Useful for nominal, categorical and everything related
+#' @param at Name of category
+#' @param l list of variables
+#' @return a string
 parlistMplus<-function(at,l) {
   paste0(at, " ARE ",paste0(l,collapse=" "),";")
 }
@@ -38,8 +45,14 @@ varlistMplus<-function(v,type=rep("*",length(v)), means=FALSE, separated=TRUE) {
 }
 
 thresholdMplus<-function(n.v, x, type=rep("*",length(th))) {  
-  
-  levels.var<-length(unique(x))-1
+  levels.var<-length(unique(na.omit(x)))-1
   v.r<-typeConvMplus(type)
   paste0("[",n.v,"$",1:levels.var,"]",v.r,";")
+}
+#' Write data file in free format for Mplus
+#' @param x     a data.frame or matrix
+#' @param filename    Filename 
+#' @export
+writeDataFileMplus<-function(x,filename) {
+  write.table(x,file=filename,na="-99",row.names=FALSE,col.names=FALSE)
 }

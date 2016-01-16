@@ -7,7 +7,7 @@
 #' @param v name of the column names 
 #' @param ignore names of columns to ignore. By default, 'n'
 #' @export
-generateDB<-function(db, def, v='var',ignore=c()) {
+generateDB<-function(db, def, v='var',ignore=c(),na.rm=TRUE) {
   if(!v %in% colnames(def)) {
     stop(paste0("you should have a column called ",v))
   }
@@ -20,11 +20,12 @@ generateDB<-function(db, def, v='var',ignore=c()) {
   out.db<-list()
   out.means<-list()
   out.sums<-list()
+  
   for(i in 1:length(escalas)) {
-    n.e.actual<-as.numeric(escalas[i])
     sel<-def.2[,i]
     
     sel[is.na(sel)]<-0
+    
     sel.l <- sel!=0
     v.act<-vars[sel.l]
     ind<-sel[sel.l]
@@ -34,20 +35,29 @@ generateDB<-function(db, def, v='var',ignore=c()) {
     if(length(v.act)>0) {
       #print(v.act)
       n.vars<-length(v.act)
-      out.db[[ escalas[i] ]]<-db[,v.act]
+      out.db[[ escalas[i] ]]<-db[,v.act,drop=F]
      # print(str(db[,v.act]))
       if(any(ind<0)) {
         for(j in which(ind<0)) {
           out.db[[ escalas[i] ]][,j]<- -ind[j] - out.db[[ escalas[i] ]][,j] 
         }
       }
-      out.means[[ escalas[i] ]]<- rowMeans(out.db[[ escalas[i] ]],na.rm=T)
+      out.means[[ escalas[i] ]]<- rowMeans(out.db[[ escalas[i] ]],na.rm=na.rm)
       out.sums[[ escalas[i] ]]<- out.means[[ escalas[i] ]]*n.vars
 
     }
   }
   
-  out<-list(db=out.db,means=data.frame(out.means),sums=data.frame(out.sums))
+  out<-list(db=out.db, 
+            means=data.frame(out.means), 
+            sums=data.frame(out.sums),
+            n=lapply(out.db ,function(xx) { rowSums(!is.na(xx))})
+            )
   class(out)<-"generateDB"
   invisible(out)
+}
+
+#' @export
+getNamesDb<-function(x) {
+  unique(do.call(c,lapply(x$db,colnames)))
 }

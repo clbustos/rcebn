@@ -10,9 +10,6 @@
 createMplusLGM<-function(x, series, pred.within, pred.between, clusters, model.within=c("i","s"), model.between=c("ib","sb"), bfile=NULL) {
   require("stringr")
   to.file<-!is.null(bfile)
-  clean.name<-function(x) {
-    str_replace_all(x,"[^a-zA-Z0-9]","")
-  }
 
   data.files<-paste0(bfile,".dat")
   inp.files<-paste0(bfile,".inp")
@@ -20,10 +17,10 @@ createMplusLGM<-function(x, series, pred.within, pred.between, clusters, model.w
   
   
   n.fac<-names(x)
-  varnames<-clean.name(colnames(full.db))
+  varnames<-cleanMplusName(colnames(full.db))
   
   if(to.file) {
-    write.table(full.db,file=data.files,na="-99",row.names=FALSE,col.names=FALSE)
+    writeDataFileMplus(full.db,data.files)
   } else {
     print(head(full.db))
   }
