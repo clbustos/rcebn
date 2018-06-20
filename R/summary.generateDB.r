@@ -9,15 +9,15 @@ summary.generateDB<-function(x) {
     if(dim(x)[2]==1) {
       NA
     } else {
-    try(alpha(x,check.keys=F)$total$raw_alpha)
+    try(psych::alpha(x,check.keys=F)$total$raw_alpha)
     }
     })
   
   m1<-colMeans(x$means,na.rm=T)
   n<-colSums(!is.na(x$means))
   s1<-apply(x$means,2,sd,na.rm=T)
-  sk<-apply(x$means,2,skew,na.rm=T)
-  ku<-apply(x$means,2,kurtosi,na.rm=T)
+  sk<-apply(x$means,2,psych::skew,na.rm=T)
+  ku<-apply(x$means,2,psych::kurtosi,na.rm=T)
   if(nrow(x$means)<=5000) {
     sw<-sapply(x$means,function(x) {shapiro.test(x)$p.value})
   } else {

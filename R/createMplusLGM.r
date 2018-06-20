@@ -1,10 +1,14 @@
 #' Create a Mplus definition for a (multilevel) LGM
 #' Requires the clustering on parameter cluster
 #' And the different variables on dataframes of the same rank
-#' @param data.frame
-#' @param list of time.series
-#' @param variable for clustering
-#' @param basename for files
+#' @param x data.frame
+#' @param series list of time.series
+#' @param pred.within Predictors for within level
+#' @param pred.between Predictors for between levels
+#' @param clusters name of variable for clustering
+#' @param model.within by default c("i","s")
+#' @param model.between by default c("ib","sb")
+#' @param bfile basename for files
 #' @export
 #' @import stringr
 createMplusLGM<-function(x, series, pred.within, pred.between, clusters, model.within=c("i","s"), model.between=c("ib","sb"), bfile=NULL) {
@@ -14,11 +18,11 @@ createMplusLGM<-function(x, series, pred.within, pred.between, clusters, model.w
   data.files<-paste0(bfile,".dat")
   inp.files<-paste0(bfile,".inp")
   full.db<-do.call(cbind,x)
-  
-  
+
+
   n.fac<-names(x)
   varnames<-cleanMplusName(colnames(full.db))
-  
+
   if(to.file) {
     writeDataFileMplus(full.db,data.files)
   } else {
@@ -33,7 +37,7 @@ createMplusLGM<-function(x, series, pred.within, pred.between, clusters, model.w
       cat(paste0(t,"\n"))
     }
   }
-  
+
   cat("TITLE:  Latent growth model\n",file=inp.files)
   cat.p("DATA:")
   cat.p(paste0("FILE IS '",data.files,"';"))
@@ -44,9 +48,9 @@ createMplusLGM<-function(x, series, pred.within, pred.between, clusters, model.w
   if(!missing(clusters)) {
     if(!missing(pred.within)) cat.p(paste0("WITHIN ARE ",paste0(clean.name(pred.within),collapse=" "),";"))
     if(!missing(pred.between)) cat.p(paste0("BETWEEN ARE ",paste0(clean.name(pred.between),collapse=" "),";"))
-    
+
   }
-  cat.p("MISSING ARE ALL (-99);") 
+  cat.p("MISSING ARE ALL (-99);")
   if(!missing(clusters)) {
     cat.p(paste0("CLUSTER = ",clusters))
     cat.p("ANALYSIS:
@@ -66,7 +70,7 @@ createMplusLGM<-function(x, series, pred.within, pred.between, clusters, model.w
     cat.p("%WITHIN%")
   }
   for(j in 1:length(series)) {
-    
+
     n.serie  <-names(series)[j]
     var.serie<-clean.name(colnames(x[,series[[j]]]))
     int.slope<-paste0(clean.name(n.serie), model.within,collapse=" ")
@@ -75,13 +79,13 @@ createMplusLGM<-function(x, series, pred.within, pred.between, clusters, model.w
     cat.p(paste0( int.slope , " | ", time.serie,";"))
     # Constraint on variance
     cat.p(paste0(paste0(var.serie,collapse=" ")," (",j,");"))
-    
+
     if(!missing(pred.within)) {
         cat.p(paste0(int.slope," ON ", clean.name(pred.within), ";"))
     }
   }
-  
-  
+
+
   if(!missing(clusters)) {
     cat.p("%BETWEEN%")
     for(j in 1:length(series)) {
@@ -92,22 +96,22 @@ createMplusLGM<-function(x, series, pred.within, pred.between, clusters, model.w
       time.serie<-paste(var.serie,times,sep="@",collapse=" ")
       cat.p(paste0( int.slope , " | ", time.serie,";"))
       # Constraint in mean
-      
-      
+
+
 
       # Constraint on variance
       cat.p(paste0(var.serie,"@0",";"))
       #cat.p(paste0("[",var.serie,"]",";"))
-      
-      
+
+
       if(!missing(pred.between)) {
         cat.p(paste0(int.slope," ON ", clean.name(pred.between), ";"))
       }
     }
   }
-  
-  
-  
+
+
+
 cat.p("OUTPUT:  SAMPSTAT STANDARDIZED TECH1 TECH4 MODINDICES(ALL);")
 
 }

@@ -1,7 +1,12 @@
 #' Create a Mplus definition for a CFA
 #' Requires a list of dataframes
-#' @param list of dataframes
-#' @param basename for files
+#' @param x list of dataframes
+#' @param groups vector of assignation to groups
+#' @param directory directory where to store results
+#' @param bfile base name for model files
+#' @param invariance_factor Calculate invariance between groups
+#' @param title Title of analysis
+#' @param difftest Calculate difftest with another model 
 #' @export
 #' @import stringr
 createMplusCFA<-function(x,groups,directory=".",bfile=NULL, invariance_factors=F,title="CFA Analysis",difftest=NULL) {

@@ -11,7 +11,7 @@ mi.descriptives<-function(mi,subset=1:nrow(complete(mi)), FUN=I, variables=1:nco
   means<-matrix(0,m,k)
   var.s<-matrix(0,m,k)
 
-  cat("Casos:",n,"\n")
+#  cat("Casos:",n,"\n")
 
 
   for(i in 1:m) {

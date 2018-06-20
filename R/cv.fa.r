@@ -11,9 +11,9 @@ limpiar.loads<-function(l) {
 lavaan.from.omega<-function(x,cut) {
   ob<-x$schmid$oblique
   f1<-psych::factor2cluster(ob,cut)
-  salida<-list() 
+  salida<-list()
   salida$g<-paste0("g=~",paste0(rownames(ob),collapse="+"))
-  
+
   if(ncol(f1)<ncol(ob)) {
     warning(ncol(ob)-ncol(f1)," factors were discarded.")
   }
@@ -32,7 +32,7 @@ lavaan.from.omega<-function(x,cut) {
       }
     }
   }
-  
+
   out<-paste0(salida,"\n",collapse="\n")
   attr(out,"nfactors")<-ncol(f1)
   out
@@ -40,9 +40,9 @@ lavaan.from.omega<-function(x,cut) {
 #' @export
 lavaan.from.fa<-function(x,cut) {
   ob<-as.matrix(loadings(x))
-  
+
   f1<-psych::factor2cluster(x,cut)
-  salida<-list()   
+  salida<-list()
   if(ncol(f1)<ncol(ob)) {
     warning(ncol(ob)-ncol(f1)," factors were discarded.")
   }
@@ -55,7 +55,7 @@ lavaan.from.fa<-function(x,cut) {
     }
     salida[[paste0("f",i)]]<-paste0("f",i,"=~",paste0(rownames(ob)[f1[,i]==1],collapse="+"))
   }
-  
+
   out<-paste0(salida,"\n",collapse="\n")
   attr(out,"nfactors")<-ncol(f1)
   out
@@ -66,14 +66,13 @@ lavaan.from.fa<-function(x,cut) {
 #' @param x dataframe
 #' @param ftt vector with number of factor to test
 #' @param folds number of folds for cross-validation
-#' @param cut threshold for factorial loadings 
-#' @import foreach
+#' @param cut threshold for factorial loadings
 #' @export
 cv.fa<-function(x,ftt,folds=5,cut=0.3,...) {
   require(foreach)
   folds<-cvTools::cvFolds(nrow(x))
   results<-list()
-  
+
   for(i in 1:folds$K) {
     training<-x[folds$subsets[folds$which!=i],]
     test<-x[folds$subsets[folds$which==i],]
@@ -82,18 +81,18 @@ cv.fa<-function(x,ftt,folds=5,cut=0.3,...) {
     cov.test<-cov(test)
     cor.test<-cor(test)
     measures=c("chisq","df","pvalue","rmsea","rmsea.pvalue","cfi","tli","srmr","aic","bic")
-    
+
     results[[paste0("r",i)]]<- foreach(j=ftt) %dopar% {
       cat("number of factors:",j,"\n")
-      
+
       fa1<-psych::fa(cor.training,nfactors = j,...)
-      
+
       f<-calculate.ml.f(cor.test,ll=loadings(fa1))
-      
+
       lfo<-lavaan.from.fa(fa1,cut)
-      
+
       sem.1<-try(lavaan::cfa(lfo,sample.cov=cov.test,sample.nobs=nrow(test),control=list(optim.method='BFGS')))
-      
+
       if(!inherits(sem.1,"try-error")) {
         list(fold=i,factors=j,factors.final=attr(lfo,"nfactors"), measures=c(f=f,lavaan::fitMeasures(sem.1,measures)))
       } else {
@@ -122,11 +121,11 @@ cv.fa.bif<-function(x,ftt,folds=5,cut=0.3,...) {
       #for(j in ftt) {
       cat("number of factors:",j," on ",nrow(training)," cases on training and ",nrow(test),"on test\n")
       fa1<-psych::omega(cor.training,nfactors = j,plot=F,...)
-      
+
       cat("Calculating SEM\n")
       lfo<-lavaan.from.omega(fa1,cut)
       sem.1<-try(lavaan::cfa(lfo,sample.cov=cov.test,sample.nobs=nrow(test),control=list(optim.method='BFGS')))
-      
+
       if(!inherits(sem.1,"try-error")) {
         list(fold=i,factors=j,factors.final=attr(lfo,"nfactors"), measures=lavaan::fitMeasures(sem.1,measures))
       } else {
@@ -158,16 +157,16 @@ plot.cv.fa<-function(x,factors="factors",measure="chisq") {
   aggre.sd.m1<-aggre.mean[,2:ncol(aggre.sd)]-aggre.sd[,2:ncol(aggre.sd)]
   #print(aggre.sd.1)
   #print(aggre.sd.m1)
-  
+
   aggre.mean$fold<-0
   aggre.sd.1$fold<- -1
   aggre.sd.1$factors<-aggre.mean$factors
   aggre.sd.m1$fold<- -2
   aggre.sd.m1$factors<-aggre.mean$factors
-  
+
   #print(aggre)
   xx1<-rbind(aggre.mean,aggre.sd.1,aggre.sd.m1,xx1)
-  
+
   xx1$summary<-factor(xx1$fold<=0,labels=c("Folds","Mean"))
   xx1$linetype<-1
   xx1$linetype[xx1$fold<0]<-2

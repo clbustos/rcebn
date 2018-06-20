@@ -8,6 +8,7 @@
 
 
 mi.mixed.ancova.analysis.ordinal<-function(mi,v,mixed_model,subset=1:nrow(complete(mi)), trans="I",  covariates=NULL ,quad=F) {
+require("ordinal")
   pow2<-function(x) {x^2}
   require(lme4)
   require(car)
@@ -59,6 +60,64 @@ mi.mixed.ancova.analysis.ordinal<-function(mi,v,mixed_model,subset=1:nrow(comple
       return(micombine.chisquare(dk=chis,df=dfs[1]))
       
       out<-list(pool.slope=fit.1, test.slope=test.slope, test.slope.simple=test.slope.simple, pool.slope=fit.1,pool.final=fit.2, ancova=test.final)
+    if(quad) {
+      out$test.quad<-test.quad
+      out$pool.quad<-fit.quad
+    }
+    class(out)<-"mi.mixed.ancova.analysis.ordinal"
+    invisible(out)
+    
+  }
+
+
+mi.mixed.ancova.analysis.ordinal.mitml<-function(mi,v,mixed_model,subset=1:nrow(complete(mi)), trans="I",  covariates=NULL ,quad=F,test_method="likelihood",...) {
+  pow2<-function(x) {x^2}
+  require(lme4)
+  require(car)
+  require(miceadds)
+  require(mitml)
+  pre=v[1]
+  post=v[2]
+  exp.v=v[3]
+    covar=""
+  if(!is.null(covariates)) {
+    covar=paste0(c("",covariates),collapse="+")
+  }
+  #Models
+  # 1 Complete model, including intersection between experimental and pre
+    f.1<-paste0(trans,"(",post,")~(",mixed_model,")+",trans,"(",pre,")",covar,"+factor(",exp.v,")+",trans,"(",pre,"):factor(",exp.v,")",collapse="")
+  # 2 Model with experimental group
+    f.2<-paste0(trans,"(",post,")~(",mixed_model,")+",trans,"(",pre,")",covar,"+factor(",exp.v,")",collapse="")
+  # 3 Model only with covariates
+    f.3<-paste0(trans,"(",post,")~(",mixed_model,")+",trans,"(",pre,")",covar,collapse="")
+    
+    message("Cases:",length(subset),"\n")
+    message(f.1,"\n")
+    message(f.2,"\n")
+    message(f.3,"\n")
+    
+    # Second, equal slopes
+    message("Model 1")
+    fit.1<-with(data=mi,ordinal::clmm(f.1,subset=subset,...))
+#   
+message("Model 2") 
+      fit.2<-with(data=mi,ordinal::clmm(f.2,subset=subset,...))
+
+    #print(fit.0)
+    #test.slope<-mitml::testModels(model=fit.1$analyses,null.model=fit.2$analyses,method="D2",use=test_method)
+    test.slope=NULL
+      
+      #met.2$pvalue es lo que necesitamos
+      
+      # Third: Classical ANCOVA
+      message("Model 3")
+      fit.3<-with(data=mi,ordinal::clmm(f.3,subset=subset,...))
+      
+      
+      #test.final<-mitml::testModels(fit.2$analyses,fit.3$analyses,method="D2",use=test_method)
+      test.final<-NULL
+      
+      out<-list(pool.slope=fit.1, test.slope=test.slope, pool.slope=fit.1, pool.final=fit.2, pool.sin.exp=fit.3, ancova=test.final)
     if(quad) {
       out$test.quad<-test.quad
       out$pool.quad<-fit.quad

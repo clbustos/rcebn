@@ -12,7 +12,7 @@ ros<-function(model,predictor,moderador,points=NULL,simple_slopes=NULL,alpha=0.0
     ef<-coef(model)
     n<-nrow(model$model)
   } else {
-    ef<-fixef(model)
+    ef<-lme4::fixef(model)
     n<-nrow(lme4::getME(model,"X"))
   }
   
@@ -78,7 +78,7 @@ ros<-function(model,predictor,moderador,points=NULL,simple_slopes=NULL,alpha=0.0
     res<-pp%*%bb
     
     de.res<-sqrt(diag(pp%*%vcv.o%*%t(pp)))
-    print(de.res)
+    #print(de.res)
     d.f.ss<-data.frame(z=simple_slopes,res=res, de.res=de.res)
   }
   out<-list(ros=c(x1,x2),points=d.f.points,simple_slopes=d.f.ss)

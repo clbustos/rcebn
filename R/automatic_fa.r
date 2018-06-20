@@ -1,12 +1,15 @@
-# La idea es seleccionar automáticamente el número correcto de factores
-# e ítems, a partir de una solución inicial. 
-# Para ello, el criterio es que cada ítem pertenezca a un factor, al menor, 
-# definido como una carga superior a un umbral.
-# No me opondré a las cargas cruzadas, por hoy al menos
-# Las reglas son:
-# - Si un factor queda sin ítem, se selecciona un número inferior de factor
-# - si hay un ítem que no carga en un factor, se elimina. Se elimina primero el ítem
-#   con menor comunalidad
+#' Automatic Factor Analysis, to delete unnecesary factors and reageants
+#' 
+#' La idea es seleccionar automáticamente el número correcto de factores
+#' e ítems, a partir de una solución inicial. 
+#' Para ello, el criterio es que cada ítem pertenezca a un factor, al menor, 
+#' definido como una carga superior a un umbral.
+#' No me opo  ndré a las cargas cruzadas, por hoy al menos
+#' Las reglas son:
+#' - Si un factor queda sin ítem, se selecciona un número inferior de factor
+#' - si hay un ítem que no carga en un factor, se elimina. Se elimina primero el ítem
+#'   con menor comunalidad
+#' 
 #' @param x data.frame
 #' @param nfactor Initial number of factors
 #' @param cut factor loading threshold
@@ -67,7 +70,7 @@ automatic_fa_bif<-function(x,nfactor,cut.t=0.3,check.crossloads=T,...) {
 }
 
 
-
+#' @export
 check.model.fa<-function(fa.m,cut.t,check.crossloads) {
   if(inherits(fa.m,"omega")) {
     ll<-fa.m$schmid$oblique
@@ -102,6 +105,9 @@ check.model.fa<-function(fa.m,cut.t,check.crossloads) {
     stop("I don't know what the error is")
   }
 }
+
+#' Print results of automatic_fa
+#'
 #' @param automatic_fa class
 #' @export
 print.automatic_fa<-function(x) {
