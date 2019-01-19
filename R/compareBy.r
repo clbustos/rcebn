@@ -6,18 +6,25 @@
 #' - Test of differences, adapted to normality of each group
 #' - Effect size of differences: d for two groups, f for three or more
 #' @param vars a data.frame with variables
-#' @param g groups to divide the information into
+#' @param g vector with groups to divide the information into
 #' @param use.2.bm: Use brunner.munzel.test on variables with two groups
 #' @param use.3.eta2: Use eta squared, instead of <code>f</code>, on comparison of
 #'                    three or more groups
 #' @param test.type "variable" for contingent on normality test, "parametric" for
 #'                  t and ANOVA and "nonparametric" for U and Kruskall-Wallis
+#' @importFrom stats wilcox.test t.test anova aov kruskal.test lm aggregate sd shapiro.test
 #' @export
 compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FALSE, test.type="variable") {
   g<-factor(g)
+  # Factor by factor...
+  if(any(is.na(g))) {
+    warning("Group variable contains NA")
+    cases.with.g<-!is.na(g)
+    vars<-vars[cases.with.g,]
+    g<-factor(g[cases.with.g])  
+  }
   n.g<-length(levels(g))
   k<-ncol(vars)
-  # Factor by factor...
 
   #var.names<-colnames(vars)
   out.desc<-matrix(0,k,n.g*2)
@@ -44,7 +51,7 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
     out.desc[i,seq(2,n.g*2,2)]<-x.sd
 
     all.normals<-all(x.st)
-
+    
 
     pool.sd<-sqrt(pooled.variance(vars[,i],g))
 
@@ -54,12 +61,16 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
     if(n.g==2) {
       es.name="ES(d)"
       if(use.2.bm) {
-        require(lawstat)
+
+        if (!requireNamespace("lawstat", quietly = TRUE)) { #nocov start
+          stop("lawstat package needed for this function to work. Please install it.",
+               call. = FALSE)
+        } #nocov end
         pr.t="W"
         xx<-split(vars[,i],g)
         x1<-xx[[1]]
         x2<-xx[[2]]
-        tt<-brunner.munzel.test(x1,x2)
+        tt<-lawstat::brunner.munzel.test(x1,x2)
         test.var[i]<-sprintf("W(%0.1f)=%0.2f",tt$parameter,abs(tt$statistic))
         p.values[i]<-tt$p.value
       } else {
@@ -81,22 +92,29 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
       } else {
       es.name="ES(f)"
       }
-      if(test.type=='parametric' || (test.type=="variable" && all.normals)) {
-        tt<-anova(aov(vars[,i]~g));
-        #print(tt$"F value")
-        test.var[i]<-sprintf("F(%d, %d)=%0.2f",tt$Df[1],tt$Df[2],abs(tt$"F value"[1]))
+      if(is.na(all.normals)) {
+        test.var[i]<-NA
+        p.values[i]<-NA
+        es[i]<-NA
+      } else {
+        if(test.type=='parametric' || (test.type=="variable" && all.normals)) {
+          tt<-anova(aov(vars[,i]~g));
+          #print(tt$"F value")
+          test.var[i]<-sprintf("F(%d, %d)=%0.2f",tt$Df[1],tt$Df[2],abs(tt$"F value"[1]))
 
-        p.values[i]<-tt$"Pr(>F)"[1]
-      } else {
-        tt<-kruskal.test(vars[,i]~g)
-        test.var[i]<-sprintf("X²(%d)=%0.2f",tt$parameter,tt$statistic)
-        p.values[i]<-tt$p.value
+          p.values[i]<-tt$"Pr(>F)"[1]
+        } else {
+          tt<-kruskal.test(vars[,i]~g)
+          test.var[i]<-sprintf("X²(%d)=%0.2f",tt$parameter,tt$statistic)
+          p.values[i]<-tt$p.value
+        }
+        if(use.3.eta2) {
+          es[i]<-summary(lm(vars[,i]~g))$r.squared
+        } else {
+          es[i]<-sigma_m/pool.sd
+        }
       }
-      if(use.3.eta2) {
-        es[i]<-summary(lm(vars[,i]~g))$r.squared
-      } else {
-        es[i]<-sigma_m/pool.sd
-      }
+      
     }
   }
 #  print(out.desc)

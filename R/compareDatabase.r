@@ -4,9 +4,6 @@
 #' @param vars.rel nombre de columnas a reportar
 #' @param vars.report vector o matriz de ids a mantener
 #' @export
-#' @import foreign
-#' @import compare
-#' @import stringr
 compareDatabases<-function(x1,x2,vars.rel=colnames(x1),vars.report=x1[,1]) {
   n<-nrow(x1)
   reporte<-list()
@@ -27,7 +24,7 @@ compareDatabases<-function(x1,x2,vars.rel=colnames(x1),vars.report=x1[,1]) {
       var.problema<-c(var.problema,i)
       next
     }
-    
+
     # comparar datos faltantes
     na1<-is.na(x1[,i])
     na2<-is.na(x2[,i])
@@ -46,14 +43,14 @@ compareDatabases<-function(x1,x2,vars.rel=colnames(x1),vars.report=x1[,1]) {
       d2[val.perdidos & !na2]<-x2[val.perdidos & !na2,i]
       reporte[[i]]<-paste(d1,"-",d2)
       reporte[[i]][-which(val.perdidos)]<-""
-      
+
       if(reportar) {
         casos.problemas<-c(casos.problemas,which(val.perdidos))
         cat("Problemas en datos perdidos:\n")
         print(which(val.perdidos))
       }
     }
-    
+
     conj<-cbind(as.character(x1[[i]]),as.character(x2[[i]]))
     falt.conj<-which(conj[,1]!=conj[,2])
     if(length(falt.conj)>0) {

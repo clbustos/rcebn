@@ -4,7 +4,8 @@
 \alias{compareFitMatrix}
 \title{export}
 \usage{
-compareFitMatrix(mods, method = NULL, scaled = F, nested = T)
+compareFitMatrix(mods, method = NULL, scaled = F, nested = T,
+  srmr.field = "srmr")
 }
 \description{
 export

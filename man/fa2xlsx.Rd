@@ -7,7 +7,7 @@ View Creates a xlsx with different factorial analysis side by side
 Marking the loadings to adscribe to a factor.}
 \usage{
 fa2xlsx(..., cut = 0.3, cut.diff = 0.1, order.items = "factor",
-  original.factors = NULL, filename = NULL)
+  original.factors = NULL, filename = NULL, open.file = TRUE)
 }
 \arguments{
 \item{...}{one or more factorial analysis}
@@ -16,8 +16,8 @@ fa2xlsx(..., cut = 0.3, cut.diff = 0.1, order.items = "factor",
 
 \item{cut.diff}{Minimal difference between loading to assign it to a specific one}
 
-\item{order.items}{A string, according to specification. 
-"factor" orders items according to new factors and loads 
+\item{order.items}{A string, according to specification.
+"factor" orders items according to new factors and loads
 "o.factor" orders according original factors and loads
 "o.factor-items" orders according to factors and items names}
 

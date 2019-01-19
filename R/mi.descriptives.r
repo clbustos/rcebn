@@ -1,6 +1,7 @@
-# Calcular las medias, desviaciones estándar e intervalos de confianza, considerando la existencia de datos perdidos
-# @export
-mi.descriptives<-function(mi,subset=1:nrow(complete(mi)), FUN=I, variables=1:ncol(FUN(complete(mi))) ) {
+#' Calcular las medias, desviaciones estándar e intervalos de confianza, considerando la existencia de datos perdidos
+#' @export
+#' @importFrom stats cor var
+mi.descriptives<-function(mi,subset=1:nrow(mice::complete(mi)), FUN=I, variables=1:ncol(FUN(mice::complete(mi))) ) {
   m<-mi$m
   if(is.logical(subset)) {
     subset<-which(subset)
@@ -12,12 +13,12 @@ mi.descriptives<-function(mi,subset=1:nrow(complete(mi)), FUN=I, variables=1:nco
   var.s<-matrix(0,m,k)
 
 #  cat("Casos:",n,"\n")
-
+  
 
   for(i in 1:m) {
 #    print(complete(mi,i)[,variables])
-    c.data<-FUN(complete(mi,i))
-    
+    c.data<-FUN(mice::complete(mi,i))
+
     means[i,]<-colMeans(c.data[subset,variables])
     var.s[i,]<-apply(c.data[subset,variables],2,var)
   }
@@ -43,8 +44,7 @@ mi.descriptives<-function(mi,subset=1:nrow(complete(mi)), FUN=I, variables=1:nco
   ee.nopool<-colMeans(ee)
   ee.pool<-sqrt(sapply(mm, function(x) {x$t}))
   
-  matriz<-data.frame(media=umeans,sd=sds,ic.l=umeans+ee.pool*qt(0.025,n-1),ic.u=umeans+ee.pool*qt(0.975,n-1),  lambda=sapply(mm,function(x) {x$lambda}), skew=skew.s,kurtosis=kurtosis.s,median=median.s)
-  
-  list(mean=umeans,sd=sds,ee=ee.nopool,ee.p=ee.pool,mm=sapply(mm,function(x) {x$lambda}),matriz=matriz)
+  matriz<-data.frame(media=umeans,sd=sds,ic.l=umeans+ee.pool*qt(0.025,n-1),ic.u=umeans+ee.pool*qt(0.975,n-1),  fmi=sapply(mm,function(x) {x$fmi}), i.var=sapply(mm,function(x) {x$r}), skew=skew.s,kurtosis=kurtosis.s,median=median.s)
+  list(mean=umeans,sd=sds,ee=ee.nopool,ee.p=ee.pool,fmi=sapply(mm,function(x) {x$fmi}),matriz=matriz)
   
 }

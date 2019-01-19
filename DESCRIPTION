@@ -4,16 +4,11 @@ Version: 0.1
 Authors@R: c(person("Claudio Bustos", "Developer", role = c("aut", "cre"),
     email = "clbustos_at_gmail_dot_com"))
 Maintainer: Claudio Bustos <clbustos@gmail.com>
-Description: Miscellaneous stuff useful for psychology
-Depends:
-    R (>= 3.1.1),
-    openxlsx
-Imports:
-    lme4,
-    compare,
-    foreign,
-    stringr,
-    psych
+Description: Miscellaneous stuff useful for psychology.
+Encoding: UTF-8
+Depends: R (>= 3.1.1)
+Imports: methods, stats, utils
+Suggests: lme4, compare, foreign, stringr, psych, lawstat, openxlsx, qgraph
 License: GPL-2
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1

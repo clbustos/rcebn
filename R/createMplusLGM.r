@@ -10,7 +10,6 @@
 #' @param model.between by default c("ib","sb")
 #' @param bfile basename for files
 #' @export
-#' @import stringr
 createMplusLGM<-function(x, series, pred.within, pred.between, clusters, model.within=c("i","s"), model.between=c("ib","sb"), bfile=NULL) {
   require("stringr")
   to.file<-!is.null(bfile)

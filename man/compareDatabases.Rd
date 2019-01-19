@@ -4,7 +4,8 @@
 \alias{compareDatabases}
 \title{Compare differences between two databases}
 \usage{
-compareDatabases(x1, x2, vars.rel = colnames(x1), vars.report = x1[, 1])
+compareDatabases(x1, x2, vars.rel = colnames(x1), vars.report = x1[,
+  1])
 }
 \arguments{
 \item{x1}{Base de datos uno}

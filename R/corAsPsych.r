@@ -2,9 +2,8 @@
 #' @param x a data.frame
 #' @param delete.lower if should delete the lower diagonal
 #' @export
-#' @import stringr
 corAsPsych<-function(x,delete.lower=T,...) {
-  c.m<-corr.test(x,...)
+  c.m<-psych::corr.test(x,...)
   c.r<-c.m$r
   c.p<-c.m$p
   # Duplicate the lower triangule of c.p
@@ -15,14 +14,14 @@ corAsPsych<-function(x,delete.lower=T,...) {
   }
   c.p1<-cut(as.numeric(c.p),breaks=c(-1,0.01,0.05,1.1),labels=c("**","*",""))
   c.p1<-matrix(c.p1,nrow(c.p),ncol(c.p))
-  
+
   out<-list()
   for(i in 1:ncol(c.r)) {
     v<-colnames(c.r)[i]
     out[[paste0(v,"(r)")]]<-round(c.r[,i],2)
     out[[paste0(v,"(p)")]]<-c.p1[,i]
   }
-  
+
   if(delete.lower) {
     for(i in 1:(ncol(c.r)-1)) {
       v<-colnames(c.r)[i]

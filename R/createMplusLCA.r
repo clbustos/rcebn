@@ -7,7 +7,6 @@
 #' @param bfile basename for files
 #' @export
 createMplusLCA<-function(x, classes, lc.vars=colnames(x), predictors, bfile=NULL) {
-  require("stringr")
   to.file<-!is.null(bfile)
   clean.name<-function(x) {
     stringr::str_replace_all(x,"[^a-zA-Z0-9]","")

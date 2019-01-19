@@ -4,8 +4,8 @@
 #' @param ... one or more factorial analysis
 #' @param cut Minimal loading to assign a item to a factor
 #' @param cut.diff Minimal difference between loading to assign it to a specific one
-#' @param order.items A string, according to specification. 
-#'                    "factor" orders items according to new factors and loads 
+#' @param order.items A string, according to specification.
+#'                    "factor" orders items according to new factors and loads
 #'                    "o.factor" orders according original factors and loads
 #'                    "o.factor-items" orders according to factors and items names
 #' @param original.factors Vector of names for original factors. Useful for target rotations
@@ -67,7 +67,7 @@ fa2xlsx.wb<-function(x,cut=0.3,cut.diff=0.1,order.items="factor", original.facto
     if(!is.null(original.factors)) {
       loads.2$o.factor<-original.factors
     }
-    
+
     if(order.items=='factor') {
       order.loads<-order(loads.2$factor,-max.per.factor)
       loads.2<-loads.2[order.loads,]
@@ -80,23 +80,23 @@ fa2xlsx.wb<-function(x,cut=0.3,cut.diff=0.1,order.items="factor", original.facto
       order.loads<-order(loads.2$o.factor,rownames(loads.2))
       loads.2<-loads.2[order.loads,]
     }
-    writeData(wb,1,f,startCol=sc,startRow=1)
-    writeData(wb,1,loads.2,startCol=sc,startRow=2,rowNames=TRUE,borders="surrounding")
+    openxlsx::writeData(wb,1,f,startCol=sc,startRow=1)
+    openxlsx::writeData(wb,1,loads.2,startCol=sc,startRow=2,rowNames=TRUE,borders="surrounding")
 
 
-    conditionalFormatting(wb, 1, rows = 2:(2+n.vars), cols = (sc+2):(sc+n.factors+1), rule=paste0("> 1"), style = negStyle)
-    conditionalFormatting(wb, 1, rows = 2:(2+n.vars), cols = (sc+2):(sc+n.factors+1), rule=paste0("< -1"), style = errStyle)
+    openxlsx::conditionalFormatting(wb, 1, rows = 2:(2+n.vars), cols = (sc+2):(sc+n.factors+1), rule=paste0("> 1"), style = negStyle)
+    openxlsx::conditionalFormatting(wb, 1, rows = 2:(2+n.vars), cols = (sc+2):(sc+n.factors+1), rule=paste0("< -1"), style = errStyle)
 
-    conditionalFormatting(wb, 1, rows = 2:(2+n.vars), cols = (sc+2):(sc+n.factors+1), rule=paste0("< -",cut), style = negStyle)
-    conditionalFormatting(wb, 1, rows = 2:(2+n.vars), cols = (sc+2):(sc+n.factors+1), rule=paste0(">",cut), style = posStyle)
-    conditionalFormatting(wb, 1, rows = 2:(2+n.vars), cols = sc+n.factors+3, rule=paste0("<",cut.diff), style = negStyle)
+    openxlsx::conditionalFormatting(wb, 1, rows = 2:(2+n.vars), cols = (sc+2):(sc+n.factors+1), rule=paste0("< -",cut), style = negStyle)
+    openxlsx::conditionalFormatting(wb, 1, rows = 2:(2+n.vars), cols = (sc+2):(sc+n.factors+1), rule=paste0(">",cut), style = posStyle)
+    openxlsx::conditionalFormatting(wb, 1, rows = 2:(2+n.vars), cols = sc+n.factors+3, rule=paste0("<",cut.diff), style = negStyle)
 
-    addStyle(wb, 1, style = s, rows = 2:(2+n.vars), cols = (sc+2):(sc+n.factors+1), gridExpand = TRUE)
+    openxlsx::addStyle(wb, 1, style = s, rows = 2:(2+n.vars), cols = (sc+2):(sc+n.factors+1), gridExpand = TRUE)
 
     sc=sc+n.factors+5+(!is.null(original.factors))
   }
   if(!is.null(filename)) {
-    saveWorkbook(wb,filename,TRUE)
+    openxlsx::saveWorkbook(wb,filename,TRUE)
   }
   wb
 }

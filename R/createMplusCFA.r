@@ -6,16 +6,15 @@
 #' @param bfile base name for model files
 #' @param invariance_factor Calculate invariance between groups
 #' @param title Title of analysis
-#' @param difftest Calculate difftest with another model 
+#' @param difftest Calculate difftest with another model
 #' @export
-#' @import stringr
 createMplusCFA<-function(x,groups,directory=".",bfile=NULL, invariance_factors=F,title="CFA Analysis",difftest=NULL) {
   require("stringr")
-  
+
   data.files<-paste0(directory,"/",bfile,".dat")
   inp.files<-paste0(directory,"/",bfile,".inp")
-  
-  
+
+
   # Create the cat method
   if(is.null(bfile)) {
     cat.p<-function(...) {
@@ -26,11 +25,11 @@ createMplusCFA<-function(x,groups,directory=".",bfile=NULL, invariance_factors=F
       cat(paste0(strwrap(paste0(...),80),"\n"), file=inp.files, append=!starting)
     }
   }
-  
-  
+
+
   full.db<-do.call(cbind,x)
   full.db.x<-full.db
-  
+
   cat.names<-varnames<-cleanMplusName(do.call(c,lapply(x,function(x) {colnames(x)})))
   n.fac<-names(x)
 
@@ -39,12 +38,12 @@ createMplusCFA<-function(x,groups,directory=".",bfile=NULL, invariance_factors=F
     full.db<-cbind(full.db,as.numeric(groups))
     levels.gr<-length(unique(groups))
   }
-  
+
   writeDataFileMplus(full.db,data.files)
 
-  
+
   nom.facs<-cleanMplusName(n.fac)
-  
+
   items.factors<-function() {
     out<-character(length(n.fac))
     i<-1
@@ -56,13 +55,13 @@ createMplusCFA<-function(x,groups,directory=".",bfile=NULL, invariance_factors=F
     }
     out
   }
-  
+
   cat.p("TITLE:",title,starting=T)
   cat.p("DATA:")
   cat.p("FILE IS '",data.files,"';")
 
   cat.p("VARIABLE:")
-  
+
   cat.p(parlistMplus("NAMES",       varnames))
   cat.p(parlistMplus("USEVARIABLES",varnames))
   cat.p(parlistMplus("CATEGORICAL", cat.names))
@@ -73,7 +72,7 @@ createMplusCFA<-function(x,groups,directory=".",bfile=NULL, invariance_factors=F
   }
   cat.p("MISSING ARE ALL (-99);")
   cat.p("ANALYSIS:
-  
+
   PARAMETERIZATION=THETA;
   ITERATIONS=5000;
   SDITERATIONS=30;
@@ -83,7 +82,7 @@ createMplusCFA<-function(x,groups,directory=".",bfile=NULL, invariance_factors=F
     }
   # Model
   cat.p("MODEL:")
-  
+
   cat.p(items.factors())
   cat.p(varlistMplus(nom.facs,"@0",means=T));
 
@@ -91,7 +90,7 @@ createMplusCFA<-function(x,groups,directory=".",bfile=NULL, invariance_factors=F
   # Definimos la configuración de invarianza de configuración, al menos...
   if(!missing(groups)) {
     cat.p(varlistMplus(nom.facs, "*"));
-    
+
     for(j in 1:length(n.fac)) {
       dd<-x[[ n.fac[j] ]]
       for(k in 1:ncol(dd)) {
@@ -100,15 +99,15 @@ createMplusCFA<-function(x,groups,directory=".",bfile=NULL, invariance_factors=F
         cat.p(thresholdMplus(n.x,dd[,k], type=paste0("t",j,"i",k,"l",1:levels.var) ))
       }
     }
-    
+
     for(gr in 2:levels.gr) {
       cat.p("MODEL g",gr,":")
       cat.p(varlistMplus(nom.facs, "*")); # varianzas de los factores
       cat.p(varlistMplus(nom.facs,"*",means=T)); # medias de los factores
       if(!invariance_factors) {
-        cat.p(items.factors())  
+        cat.p(items.factors())
       }
-      
+
       for(j in 1:length(n.fac)) {
         dd<-x[[ n.fac[j] ]]
         for(k in 1:ncol(dd)) {
@@ -120,8 +119,8 @@ createMplusCFA<-function(x,groups,directory=".",bfile=NULL, invariance_factors=F
       }
       # varianza de los residuales
       cat.p(varlistMplus(cat.names,"*"))
-      
-      
+
+
     }
   }
 cat.p("OUTPUT:  SAMPSTAT STANDARDIZED TECH1 TECH2 TECH4 MODINDICES(ALL);")

@@ -4,11 +4,11 @@
 #' @param original object returned by \code{read.spss}
 #' @param df The data.frame to export
 #' @param basename Base name for datafile and codefile
-#' @param varnames
+#' @param varnames names for columns on dataset.
 #'
 #' @export
 #'
-exportSpss<-function(original,df,basename,varnames=NULL) {
+exportSPSS<-function(original,df,basename,varnames=NULL) {
   datafile=paste0(basename,".dat")
   codefile=paste0(basename,".sps")
     adQuote <-  function (x) paste("\"", x, "\"", sep = "")

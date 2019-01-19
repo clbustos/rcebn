@@ -5,7 +5,6 @@
 #' @param x data.frame
 #' @param directory directory to which save data
 #' @param bfile base filename for scripts and data
-#' @import stringr
 #' @export
 createMplusGeneric<-function(x, directory=".", bfile=NULL) {
 

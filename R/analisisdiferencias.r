@@ -1,6 +1,3 @@
-library(foreign)
-library(compare)
-library(stringr)
 #' Compara las diferencias entre dos bases de datos
 #' @param x1 Base de datos uno
 #' @param x2 Base de datos dos
@@ -15,7 +12,7 @@ analisisDiferencias <-
            vars.report = x1[, 1],
            verbose = T) {
     if (nrow(x1) != nrow(x2)) {
-      stop("Número diferente de filas en base 1 que en base 2")
+      stop("Different number of rows between database 1 and database 2")
     }
     n <- nrow(x1)
     reporte <- list()

@@ -8,8 +8,6 @@
 #' @param quad Use quadratic regression on pre-value
 #' @param extra test extra variables, one on one.
 #' @param test_method Test method to use on pool.compare
-
-
 mi.mixed.ancova.analysis<-function(mi,v,mixed_model,subset=1:nrow(complete(mi)), trans="I",  covariates=NULL ,quad=F, extra=NULL,test_method="Wald") {
 
   pow2<-function(x) {x^2}
@@ -44,8 +42,8 @@ mi.mixed.ancova.analysis<-function(mi,v,mixed_model,subset=1:nrow(complete(mi)),
     lvt.with<-function(f) {
       sapply(with(mi,
       {
-      lm.1<-lmer(f,subset=subset,REML=F)
-      leveneTest(y=resid(lm.1),group=get(exp.v)[subset])$"F value"[1]
+      lm.1<-lme4::lmer(f,subset=subset,REML=F)
+      car::leveneTest(y=resid(lm.1),group=get(exp.v)[subset])$"F value"[1]
 
       } )$analyses,I)
     }
@@ -58,7 +56,7 @@ mi.mixed.ancova.analysis<-function(mi,v,mixed_model,subset=1:nrow(complete(mi)),
       # First and a half, quadratic
       fit.quad<-with(data=mi,lmer(f.1cuad,subset=subset,REML=F))
       #return(met.2)
-      test.quad<-pool.compare(fit.quad,fit.1,method=test_method,data=mi.1)
+      test.quad<-mice::pool.compare(fit.quad,fit.1,method=test_method,data=mi.1)
 
     }
 
@@ -68,7 +66,7 @@ mi.mixed.ancova.analysis<-function(mi,v,mixed_model,subset=1:nrow(complete(mi)),
     fit.2<-with(data=mi,lmer(f.2,subset=subset,REML=F))
 
     #print(fit.0)
-    test.slope<-pool.compare(fit.1,fit.2,method=test_method,data=mi.1 )
+    test.slope<-mice::pool.compare(fit.1,fit.2,method=test_method,data=mi.1 )
     base_model<-f.2
     base_fit<-fit.2
 
@@ -93,7 +91,7 @@ mi.mixed.ancova.analysis<-function(mi,v,mixed_model,subset=1:nrow(complete(mi)),
       fit.1a<-with(data=mi,lmer(f.1a,subset=subset,REML=F))
       fit.1b<-with(data=mi,lmer(f.1b,subset=subset,REML=F))
       #print(fit.0)
-      test.slope.simple<-pool.compare(fit.1a,fit.1b,method=test_method,data=mi.1)
+      test.slope.simple<-mice::pool.compare(fit.1a,fit.1b,method=test_method,data=mi.1)
     }
 
     #met.2$pvalue es lo que necesitamos
@@ -103,7 +101,7 @@ mi.mixed.ancova.analysis<-function(mi,v,mixed_model,subset=1:nrow(complete(mi)),
     fit.2<-with(data=mi,lmer(f.2,subset=subset,REML=F))
     fit.3<-with(data=mi,lmer(f.3,subset=subset,REML=F))
     #print(fit.0)
-    test.final<-pool.compare(fit.2,fit.3,method=test_method,data=mi.1)
+    test.final<-mice::pool.compare(fit.2,fit.3,method=test_method,data=mi.1)
 
 
     extra_res=list()
@@ -111,7 +109,7 @@ mi.mixed.ancova.analysis<-function(mi,v,mixed_model,subset=1:nrow(complete(mi)),
       for(ex in extra) {
           f.extra<-paste0(base_model,"+",ex,collapse="")
           fit.extra<-with(data=mi,lmer(f.extra,subset=subset,REML=F))
-          test.extra<-pool.compare(fit.extra,base_fit,method=test_method,data=mi.1)
+          test.extra<-mice::pool.compare(fit.extra,base_fit,method=test_method,data=mi.1)
           extra_res[[ex]]<-list(test=test.extra,pool=fit.extra)
       }
     }
@@ -180,7 +178,7 @@ mi.mixed.ancova.analysis.mitml<-function(mi,v,mixed_model,subset=1:nrow(complete
     sapply(with(mi,
                 {
                   lm.1<-lmer(f,subset=subset,REML=F)
-                  leveneTest(y=resid(lm.1),group=get(exp.v)[subset])$"F value"[1]
+                  leveneTest(y=resid(lm.1),group=factor(get(exp.v)[subset]))$"F value"[1]
 
                 } )$analyses,I)
   }
