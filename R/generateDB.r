@@ -43,7 +43,7 @@ generateDB<-function(db, def, v='var',ignore=c(),na.rm=TRUE) {
         }
       }
       if(any(sapply(out.db[[escalas[i]]],function(x) {!is.numeric(x) & !is.logical(x)}))) {
-        stop(paste0("Hay una columna no numerica en ",i))
+        stop(paste0("There is a non-numeric column inside (",i,"):",escalas[i]))
       }
       out.means[[ escalas[i] ]]<- rowMeans(out.db[[ escalas[i] ]],na.rm=na.rm)
       is.na(out.means[[ escalas[i] ]])<- is.nan(out.means[[ escalas[i] ]])

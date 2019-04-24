@@ -148,9 +148,22 @@ omg.num.correct.is.deleted<-function(x,keys,subset=NULL,...) {
 #' @export
 omg<-function(x,keys,partialize=NULL,...) {
 
-  x<-x[,rownames(keys)]
+  # Check if keys rownames are correct
+  
+  rn.keys<-rownames(keys)
+  
+  if(!all(rn.keys %in% colnames(x))) {
+    stop("Some rownames in keys are not available as colnames in x")
+  }
+  
+  x<-x[, rn.keys]
+  if(!all(complete.cases(x))) {
+    stop("Missing cases in x")
+  }
+
   cc<-abs(cor.corrected(x=x,keys=keys,partialize=partialize,...))
 
+  
   if(!is.null(partialize)) {
     keys<-keys[,which(!(1:ncol(keys) %in% partialize))]
   }

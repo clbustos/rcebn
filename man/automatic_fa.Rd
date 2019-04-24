@@ -18,8 +18,8 @@ disable this on biquartimin or other type of rotations}
 }
 \description{
 La idea es seleccionar automáticamente el número correcto de factores
-e ítems, a partir de una solución inicial. 
-Para ello, el criterio es que cada ítem pertenezca a un factor, al menor, 
+e ítems, a partir de una solución inicial.
+Para ello, el criterio es que cada ítem pertenezca a un factor, al menor,
 definido como una carga superior a un umbral.
 No me opo  ndré a las cargas cruzadas, por hoy al menos
 Las reglas son:

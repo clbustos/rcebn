@@ -16,7 +16,7 @@ compareBy(vars, g, varnames = colnames(vars), use.2.bm = FALSE,
 \arguments{
 \item{vars}{a data.frame with variables}
 
-\item{g}{groups to divide the information into}
+\item{g}{vector with groups to divide the information into}
 
 \item{test.type}{"variable" for contingent on normality test, "parametric" for
 t and ANOVA and "nonparametric" for U and Kruskall-Wallis}

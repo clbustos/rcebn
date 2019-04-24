@@ -1,5 +1,11 @@
-# 
-#' @  export
+#' Compare fit-indexes for lavaan models
+#' @param mods x
+#' @param method x
+#' @param scaled x
+#' @param nested x
+#' @param srmr.field x
+#' @return a data.frame
+#' @export
 compareFitMatrix<-function(mods,method=NULL,scaled=F,nested=T,srmr.field="srmr") {
   if(scaled & is.null(method)) {
     method="satorra.2000"

@@ -2,11 +2,25 @@
 % Please edit documentation in R/compareFitMatrix.r
 \name{compareFitMatrix}
 \alias{compareFitMatrix}
-\title{export}
+\title{Compare fit-indexes for lavaan models}
 \usage{
 compareFitMatrix(mods, method = NULL, scaled = F, nested = T,
   srmr.field = "srmr")
 }
+\arguments{
+\item{mods}{x}
+
+\item{method}{x}
+
+\item{scaled}{x}
+
+\item{nested}{x}
+
+\item{srmr.field}{x}
+}
+\value{
+a data.frame
+}
 \description{
-export
+Compare fit-indexes for lavaan models
 }
