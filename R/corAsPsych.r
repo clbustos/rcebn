@@ -2,7 +2,7 @@
 #' @param x a data.frame
 #' @param delete.lower if should delete the lower diagonal
 #' @export
-corAsPsych<-function(x,delete.lower=T,...) {
+corAsPsych<-function(x,delete.lower=T, round.digits=2,...) {
   c.m<-psych::corr.test(x,...)
   c.r<-c.m$r
   c.p<-c.m$p
@@ -18,7 +18,7 @@ corAsPsych<-function(x,delete.lower=T,...) {
   out<-list()
   for(i in 1:ncol(c.r)) {
     v<-colnames(c.r)[i]
-    out[[paste0(v,"(r)")]]<-round(c.r[,i],2)
+    out[[paste0(v,"(r)")]]<-round(c.r[,i],round.digits)
     out[[paste0(v,"(p)")]]<-c.p1[,i]
   }
 

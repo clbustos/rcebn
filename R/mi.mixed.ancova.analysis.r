@@ -8,7 +8,7 @@
 #' @param quad Use quadratic regression on pre-value
 #' @param extra test extra variables, one on one.
 #' @param test_method Test method to use on pool.compare
-mi.mixed.ancova.analysis<-function(mi,v,mixed_model,subset=1:nrow(complete(mi)), trans="I",  covariates=NULL ,quad=F, extra=NULL,test_method="Wald") {
+mi.mixed.ancova.analysis<-function(mi,v,mixed_model,subset=1:nrow(complete(mi)), trans="I",  covariates=NULL ,quad=F, extra=NULL,test_method="wald") {
 
   pow2<-function(x) {x^2}
   require(lme4)
