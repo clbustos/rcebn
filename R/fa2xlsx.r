@@ -22,6 +22,62 @@ fa2xlsx<-function(...,cut=0.3,cut.diff=0.1,order.items="factor", original.factor
   }
 }
 
+fa2DT<-function(...,cut=0.3,cut.diff=0.1,order.items="factor", original.factors=NULL) {
+  fs<-fa2structure(list(...), cut=cut,cut.diff=cut.diff,order.items = order.items,original.factors = original.factors)
+  res<-lapply(fs,function(x) {
+    fac.dt<-DT::datatable(x$loads,caption = x$f)
+    fac.dt %>%
+      DT::formatRound(columns=c(x$factors.names,"difs"), digits=3) %>%
+      DT::formatStyle(columns="difs", backgroundColor = DT::styleInterval(cuts=c(cut.diff), values=c("red","white") )) %>%
+      DT::formatStyle(columns=x$factors.names, backgroundColor = DT::styleInterval(cuts=c(-cut, cut), values=c("red","white","lightgreen") ))
+  })
+  invisible(res)
+}
+#' @export
+fa2structure<-function(x,cut=0.3,cut.diff=0.1,order.items="factor", original.factors=NULL) {
+  if(is.null(names(x))) {
+    names(x)<-paste0("FA",1:length(x))
+  }
+
+  lapply(names(x), function(f) {
+    if(inherits(x[[f]],"omega")) {
+      loads<-x[[f]]$schmid$oblique
+    } else {
+      loads<-loadings(x[[f]])
+    }
+
+    class(loads)<-"matrix"
+    n.vars<-nrow(loads)
+    n.factors<-ncol(loads)
+
+    num.factor<-cluster2factor(loads,cut)
+
+    max.per.factor<-apply(loads,1,function(x) {max(abs(x))})
+
+    difs<-apply(loads,1,function(x) {x<-abs(x);y<-tail(sort(x),2); y[2]-y[1] })
+    factors.names<-colnames(loads)
+
+
+    loads.2<-data.frame(id=1:n.vars,loads,factor=num.factor,difs=difs)
+    if(!is.null(original.factors)) {
+      loads.2$o.factor<-original.factors
+    }
+
+    if(order.items=='factor') {
+      order.loads<-order(loads.2$factor,-max.per.factor)
+      loads.2<-loads.2[order.loads,]
+    } else if (order.items=='o.factor' && !is.null(original.factors)) {
+
+      order.loads<-order(loads.2$o.factor,loads.2$factor,-max.per.factor)
+      loads.2<-loads.2[order.loads,]
+    }else if (order.items=='o.factor-items' && !is.null(original.factors)) {
+
+      order.loads<-order(loads.2$o.factor,rownames(loads.2))
+      loads.2<-loads.2[order.loads,]
+    }
+    list(n.vars=n.vars,n.factors=n.factors,f=f,loads=loads.2, factors.names=factors.names)
+  })
+}
 #' fa2xlsx.wb
 #' Creates a xlsx with different factorial analysis side by side
 #' Marking the loadings to adscribe to a factor
@@ -42,44 +98,16 @@ fa2xlsx.wb<-function(x,cut=0.3,cut.diff=0.1,order.items="factor", original.facto
   posStyle <- createStyle(fontColour = "#003300", bgFill = "#66FF66")
   errStyle <- createStyle(fontColour = "#330033", bgFill = "#FF66FF")
 
-  if(is.null(names(x))) {
-    names(x)<-paste0("FA",1:length(x))
-  }
-  for(f in names(x)) {
-    if(inherits(x[[f]],"omega")) {
-      loads<-x[[f]]$schmid$oblique
-    } else {
-      loads<-loadings(x[[f]])
-    }
 
-    class(loads)<-"matrix"
-    n.vars<-nrow(loads)
-    n.factors<-ncol(loads)
+  structure<-fa2structure(x=x,cut=cut,cut.diff = cut.diff, order.items = order.items, original.factors = original.factors)
 
-    num.factor<-cluster2factor(loads,cut)
+  for(i in 1:length(structure)) {
 
-    max.per.factor<-apply(loads,1,function(x) {max(abs(x))})
+    f=structure[[i]]$f
+    loads.2=structure[[i]]$loads
+    n.vars=structure[[i]]$n.vars
+    n.factors=structure[[i]]$n.factors
 
-    difs<-apply(loads,1,function(x) {x<-abs(x);y<-tail(sort(x),2); y[2]-y[1] })
-
-
-    loads.2<-data.frame(id=1:n.vars,loads,factor=num.factor,difs=difs)
-    if(!is.null(original.factors)) {
-      loads.2$o.factor<-original.factors
-    }
-
-    if(order.items=='factor') {
-      order.loads<-order(loads.2$factor,-max.per.factor)
-      loads.2<-loads.2[order.loads,]
-    } else if (order.items=='o.factor' && !is.null(original.factors)) {
-
-      order.loads<-order(loads.2$o.factor,loads.2$factor,-max.per.factor)
-      loads.2<-loads.2[order.loads,]
-    }else if (order.items=='o.factor-items' && !is.null(original.factors)) {
-
-      order.loads<-order(loads.2$o.factor,rownames(loads.2))
-      loads.2<-loads.2[order.loads,]
-    }
     openxlsx::writeData(wb,1,f,startCol=sc,startRow=1)
     openxlsx::writeData(wb,1,loads.2,startCol=sc,startRow=2,rowNames=TRUE,borders="surrounding")
 
@@ -95,6 +123,7 @@ fa2xlsx.wb<-function(x,cut=0.3,cut.diff=0.1,order.items="factor", original.facto
 
     sc=sc+n.factors+5+(!is.null(original.factors))
   }
+
   if(!is.null(filename)) {
     openxlsx::saveWorkbook(wb,filename,TRUE)
   }
