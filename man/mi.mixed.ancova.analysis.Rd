@@ -6,7 +6,7 @@
 \usage{
 mi.mixed.ancova.analysis(mi, v, mixed_model,
   subset = 1:nrow(complete(mi)), trans = "I", covariates = NULL,
-  quad = F, extra = NULL, test_method = "Wald")
+  quad = F, extra = NULL, test_method = "wald")
 }
 \arguments{
 \item{mi}{mice multiple imputation database}

@@ -1,14 +1,14 @@
 Package: cebn
 Title: Multiple methods for psychologist
-Version: 0.1
+Version: 0.2
 Authors@R: c(person("Claudio Bustos", "Developer", role = c("aut", "cre"),
     email = "clbustos_at_gmail_dot_com"))
 Maintainer: Claudio Bustos <clbustos@gmail.com>
-Description: Miscellaneous stuff useful for psychology.
+Description: Miscellaneous stuff useful for data analysis, mainly psichology.
 Encoding: UTF-8
 Depends: R (>= 3.1.1)
 Imports: methods, stats, utils
-Suggests: lme4, compare, foreign, stringr, psych, lawstat, openxlsx, qgraph
+Suggests: lme4, compare, foreign, stringr, psych, lawstat, openxlsx, qgraph, DT
 License: GPL-2
 LazyData: true
 RoxygenNote: 6.1.1

@@ -71,6 +71,7 @@ getNamesDb<-function(x) {
 #' @param x def.var definition. Can contain NA 
 #' @param v Name of var variable
 #' @export
+
 def.var.to.keys<-function(x,v="var") {
   item.names<-x[,v]
   keys<-x[,colnames(x)!="var"]

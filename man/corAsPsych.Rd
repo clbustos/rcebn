@@ -4,7 +4,7 @@
 \alias{corAsPsych}
 \title{Returns a data.frame with correlations like the psych uses}
 \usage{
-corAsPsych(x, delete.lower = T, ...)
+corAsPsych(x, delete.lower = T, round.digits = 2, ...)
 }
 \arguments{
 \item{x}{a data.frame}
