@@ -70,6 +70,7 @@ getNamesDb<-function(x) {
 #' Useful to interface def.var files with lavaan or psych packages
 #' @param x def.var definition. Can contain NA 
 #' @param v Name of var variable
+#' @export
 def.var.to.keys<-function(x,v="var") {
   item.names<-x[,v]
   keys<-x[,colnames(x)!="var"]
