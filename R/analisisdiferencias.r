@@ -1,7 +1,7 @@
 #' Compara las diferencias entre dos bases de datos
 #' @param x1 Base de datos uno
 #' @param x2 Base de datos dos
-#' @param vars.rel nombre de columnas a reportar
+#' @param vars.rel nombre de columnas a reportar si hay diferencias
 #' @param vars.report vector o matriz de ids a mantener
 #' @export
 

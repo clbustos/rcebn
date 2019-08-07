@@ -12,7 +12,7 @@ analisisDiferencias(x1, x2, vars.rel = colnames(x1), vars.report = x1[,
 
 \item{x2}{Base de datos dos}
 
-\item{vars.rel}{nombre de columnas a reportar}
+\item{vars.rel}{nombre de columnas a reportar si hay diferencias}
 
 \item{vars.report}{vector o matriz de ids a mantener}
 }
