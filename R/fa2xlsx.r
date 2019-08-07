@@ -22,6 +22,7 @@ fa2xlsx<-function(...,cut=0.3,cut.diff=0.1,order.items="factor", original.factor
   }
 }
 
+#' @export
 fa2DT<-function(...,cut=0.3,cut.diff=0.1,order.items="factor", original.factors=NULL) {
   fs<-fa2structure(list(...), cut=cut,cut.diff=cut.diff,order.items = order.items,original.factors = original.factors)
   res<-lapply(fs,function(x) {
