@@ -1,4 +1,5 @@
 #' Generate a canonical description table to describe multiple dichotomic variables
+#' 
 #' By default, the first level is the 'correct' answer.
 #' Includes: 
 #' - Proportion of correct 
@@ -6,8 +7,11 @@
 #' - Effect size: Cramer V
 #' @param vars a data.frame with variables
 #' @param g groups to divide the information into
+#' @param varnames variables to analyze
+#' @param success value to considered as success
+#' @param descriptives value to present as descriptive. Could be 'n', 'p' or 'both' 
 #' @export
-compareDichotomicBy<-function(vars,g,varnames=colnames(vars),success=NULL) {
+compareDichotomicBy<-function(vars,g,varnames=colnames(vars),success=NULL,descriptives='both') {
 
 # Copied from sjmisc
 cramer<-function (tab) 
@@ -38,7 +42,13 @@ cramer<-function (tab)
     x.num<-aggregate(v==success,list(g=g),sum,na.rm=T)$x
 
     x.prop<-aggregate(v==success,list(g=g),mean,na.rm=T)$x
-    out.desc[i,]<-paste0(x.num," ( ",round(x.prop*100,1),"%)")
+    if(descriptives=='both') {
+      out.desc[i,]<-paste0(x.num," ( ",round(x.prop*100,1),"%)")
+    } else if (descriptives=='n') {
+      out.desc[i,]<-x.num
+    } else if (descriptives=='p') {
+      out.desc[i,]<-round(x.prop*100,1)
+    }
     if(!any(v==success)) {
       next;
     }

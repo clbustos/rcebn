@@ -21,14 +21,14 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
     warning("Group variable contains NA")
     cases.with.g<-!is.na(g)
     vars<-vars[cases.with.g,]
-    g<-factor(g[cases.with.g])  
+    g<-factor(g[cases.with.g])
   }
   n.g<-length(levels(g))
   k<-ncol(vars)
 
   #var.names<-colnames(vars)
-  out.desc<-matrix(0,k,n.g*2)
-  colnames(out.desc)<-paste0(paste0(gl(n.g,2,labels=levels(g)),   rep(c(".M",".DE"),n.g)))
+  out.desc<-matrix(0,k,n.g*3)
+  colnames(out.desc)<-paste0(paste0(gl(n.g,3,labels=levels(g)),   rep(c(".n",".M",".DE"),n.g)))
   test.var<-character(k)
   p.values<-numeric(k)
   es<-numeric(k)
@@ -38,6 +38,8 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
     x.p<-x.n/sum(x.n)
     x.m<-aggregate(vars[,i],list(g=g),mean,na.rm=T)$x
     x.sd<-aggregate(vars[,i],list(g=g),sd,na.rm=T)$x
+    x.n<-aggregate(vars[,i],list(g=g),function(x) {sum(!is.na(x))})$x
+
     if(!unico)  {
       x.st<-aggregate(vars[,i],list(g=g),function(x) {
       if(length(x)>2 & length(x)<5000 ) {
@@ -47,11 +49,12 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
       }
       })$x
     }
-    out.desc[i,seq(1,n.g*2,2)]<-x.m
-    out.desc[i,seq(2,n.g*2,2)]<-x.sd
+    out.desc[i,seq(1,n.g*3,3)]<-x.n
+    out.desc[i,seq(2,n.g*3,3)]<-x.m
+    out.desc[i,seq(3,n.g*3,3)]<-x.sd
 
     all.normals<-all(x.st)
-    
+
 
     pool.sd<-sqrt(pooled.variance(vars[,i],g))
 
@@ -114,7 +117,7 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
           es[i]<-sigma_m/pool.sd
         }
       }
-      
+
     }
   }
 #  print(out.desc)

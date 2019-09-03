@@ -43,6 +43,8 @@ fa2structure<-function(x,cut=0.3,cut.diff=0.1,order.items="factor", original.fac
   lapply(names(x), function(f) {
     if(inherits(x[[f]],"omega")) {
       loads<-x[[f]]$schmid$oblique
+    } else if(inherits(x[[f]],"matrix")) {
+      loads<-x[[f]]
     } else {
       loads<-loadings(x[[f]])
     }

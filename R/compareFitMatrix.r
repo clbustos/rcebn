@@ -31,8 +31,13 @@ compareFitMatrix<-function(mods,method=NULL,scaled=F,nested=T,srmr.field="srmr")
       
       tt.o<-c(diff.cfi=NA,chi.diff=NA)
       if(i>1) {
-        tt<-lavTestLRT(mods[[i]],mods[[i-1]],method=method)
-        tt.o<-c(diff.cfi=round(fitMeasures(mods[[i]], .as("cfi") )-fitMeasures(mods[[i-1]], .as("cfi")),3),chi.diff=sprintf("X²(%d)=%0.2f, p=%0.3f",as.integer(tt$`Df diff`[2]), tt$`Chisq diff`[2],tt$`Pr(>Chisq)`[2]))
+        chi.diff<-tryCatch({
+          tt<-lavTestLRT(mods[[i]],mods[[i-1]],method=method)
+          sprintf("X²(%d)=%0.2f, p=%0.3f",as.integer(tt$`Df diff`[2]), tt$`Chisq diff`[2],tt$`Pr(>Chisq)`[2])
+          }, error=function(e) as.character(e)
+          )
+        
+        tt.o<-c(diff.cfi=round(fitMeasures(mods[[i]], .as("cfi") )-fitMeasures(mods[[i-1]], .as("cfi")),3),chi.diff=chi.diff)
       }
       c(fm,tt.o)
     } else {
