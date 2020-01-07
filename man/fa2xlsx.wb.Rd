@@ -6,8 +6,14 @@
 Creates a xlsx with different factorial analysis side by side
 Marking the loadings to adscribe to a factor}
 \usage{
-fa2xlsx.wb(x, cut = 0.3, cut.diff = 0.1, order.items = "factor",
-  original.factors = NULL, filename = NULL)
+fa2xlsx.wb(
+  x,
+  cut = 0.3,
+  cut.diff = 0.1,
+  order.items = "factor",
+  original.factors = NULL,
+  filename = NULL
+)
 }
 \arguments{
 \item{x}{a list with factorial analysis}

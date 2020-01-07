@@ -4,8 +4,13 @@
 \alias{analisisDiferencias}
 \title{Compara las diferencias entre dos bases de datos}
 \usage{
-analisisDiferencias(x1, x2, vars.rel = colnames(x1), vars.report = x1[,
-  1], verbose = T)
+analisisDiferencias(
+  x1,
+  x2,
+  vars.rel = colnames(x1),
+  vars.report = x1[, 1],
+  verbose = T
+)
 }
 \arguments{
 \item{x1}{Base de datos uno}

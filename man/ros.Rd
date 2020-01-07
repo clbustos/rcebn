@@ -4,8 +4,14 @@
 \alias{ros}
 \title{Region of significance analysis}
 \usage{
-ros(model, predictor, moderador, points = NULL, simple_slopes = NULL,
-  alpha = 0.05)
+ros(
+  model,
+  predictor,
+  moderador,
+  points = NULL,
+  simple_slopes = NULL,
+  alpha = 0.05
+)
 }
 \arguments{
 \item{predictor}{Name of predictor variable, as appears on coef calling}

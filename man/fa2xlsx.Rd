@@ -6,8 +6,15 @@
 View Creates a xlsx with different factorial analysis side by side
 Marking the loadings to adscribe to a factor.}
 \usage{
-fa2xlsx(..., cut = 0.3, cut.diff = 0.1, order.items = "factor",
-  original.factors = NULL, filename = NULL, open.file = TRUE)
+fa2xlsx(
+  ...,
+  cut = 0.3,
+  cut.diff = 0.1,
+  order.items = "factor",
+  original.factors = NULL,
+  filename = NULL,
+  open.file = TRUE
+)
 }
 \arguments{
 \item{...}{one or more factorial analysis}

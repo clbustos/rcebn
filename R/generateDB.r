@@ -2,6 +2,7 @@
 #' and create both a database complete set
 #' and a means dataframe.
 #' Like scoreItems, but less cumbersome
+#'
 #' @param db the database
 #' @param def the definition matrix. Should have 'v' parameter on in
 #' @param v name of the column names
@@ -68,7 +69,7 @@ getNamesDb<-function(x) {
 #' Create a keys matrix for a def.var definition
 #' like the one generateDB uses.
 #' Useful to interface def.var files with lavaan or psych packages
-#' @param x def.var definition. Can contain NA 
+#' @param x def.var definition. Can contain NA
 #' @param v Name of var variable
 #' @export
 

@@ -3,7 +3,6 @@
 \docType{package}
 \name{cebn}
 \alias{cebn}
-\alias{cebn-package}
 \title{cebn.
 Multiple methods only interesting for me}
 \description{

@@ -10,8 +10,14 @@ Includes:
 - Test of differences, adapted to normality of each group
 - Effect size of differences: d for two groups, f for three or more}
 \usage{
-compareBy(vars, g, varnames = colnames(vars), use.2.bm = FALSE,
-  use.3.eta2 = FALSE, test.type = "variable")
+compareBy(
+  vars,
+  g,
+  varnames = colnames(vars),
+  use.2.bm = FALSE,
+  use.3.eta2 = FALSE,
+  test.type = "variable"
+)
 }
 \arguments{
 \item{vars}{a data.frame with variables}

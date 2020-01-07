@@ -4,9 +4,18 @@
 \alias{mi.mixed.ancova.analysis.mitml}
 \title{Calcular ancovas de manera general para modelos mixtos, en una base pre-establecida}
 \usage{
-mi.mixed.ancova.analysis.mitml(mi, v, mixed_model,
-  subset = 1:nrow(complete(mi)), trans = "I", covariates = NULL,
-  quad = F, extra = NULL, test_method = "D2", change.base = F)
+mi.mixed.ancova.analysis.mitml(
+  mi,
+  v,
+  mixed_model,
+  subset = 1:nrow(complete(mi)),
+  trans = "I",
+  covariates = NULL,
+  quad = F,
+  extra = NULL,
+  test_method = "D2",
+  change.base = F
+)
 }
 \arguments{
 \item{mi}{mice multiple imputation database}

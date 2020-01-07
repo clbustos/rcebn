@@ -4,8 +4,7 @@
 \alias{createMplusLCA}
 \title{Create a Mplus definition for Latent Class Analysis}
 \usage{
-createMplusLCA(x, classes, lc.vars = colnames(x), predictors,
-  bfile = NULL)
+createMplusLCA(x, classes, lc.vars = colnames(x), predictors, bfile = NULL)
 }
 \arguments{
 \item{x}{data.frame with data}

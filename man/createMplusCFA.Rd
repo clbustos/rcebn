@@ -5,8 +5,15 @@
 \title{Create a Mplus definition for a CFA
 Requires a list of dataframes}
 \usage{
-createMplusCFA(x, groups, directory = ".", bfile = NULL,
-  invariance_factors = F, title = "CFA Analysis", difftest = NULL)
+createMplusCFA(
+  x,
+  groups,
+  directory = ".",
+  bfile = NULL,
+  invariance_factors = F,
+  title = "CFA Analysis",
+  difftest = NULL
+)
 }
 \arguments{
 \item{x}{list of dataframes}

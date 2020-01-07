@@ -2,22 +2,28 @@
 % Please edit documentation in R/compareDichotomicBy.r
 \name{compareDichotomicBy}
 \alias{compareDichotomicBy}
-\title{Generate a canonical description table to describe multiple dichotomic variables
-By default, the first level is the 'correct' answer.
-Includes: 
-- Proportion of correct 
-- Chi-Square test
-- Effect size: Cramer V}
+\title{Generate a canonical description table to describe multiple dichotomic variables}
 \usage{
-compareDichotomicBy(vars, g, varnames = colnames(vars), success = NULL)
+compareDichotomicBy(
+  vars,
+  g,
+  varnames = colnames(vars),
+  success = NULL,
+  descriptives = "both"
+)
 }
 \arguments{
 \item{vars}{a data.frame with variables}
 
 \item{g}{groups to divide the information into}
+
+\item{varnames}{variables to analyze}
+
+\item{success}{value to considered as success}
+
+\item{descriptives}{value to present as descriptive. Could be 'n', 'p' or 'both'}
 }
 \description{
-Generate a canonical description table to describe multiple dichotomic variables
 By default, the first level is the 'correct' answer.
 Includes: 
 - Proportion of correct 

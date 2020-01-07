@@ -6,9 +6,16 @@
 Requires the clustering on parameter cluster
 And the different variables on dataframes of the same rank}
 \usage{
-createMplusLGM(x, series, pred.within, pred.between, clusters,
-  model.within = c("i", "s"), model.between = c("ib", "sb"),
-  bfile = NULL)
+createMplusLGM(
+  x,
+  series,
+  pred.within,
+  pred.between,
+  clusters,
+  model.within = c("i", "s"),
+  model.between = c("ib", "sb"),
+  bfile = NULL
+)
 }
 \arguments{
 \item{x}{data.frame}

@@ -4,8 +4,13 @@
 \alias{compareFitMatrix}
 \title{Compare fit-indexes for lavaan models}
 \usage{
-compareFitMatrix(mods, method = NULL, scaled = F, nested = T,
-  srmr.field = "srmr")
+compareFitMatrix(
+  mods,
+  method = NULL,
+  scaled = F,
+  nested = T,
+  srmr.field = "srmr"
+)
 }
 \arguments{
 \item{mods}{x}

@@ -11,4 +11,4 @@ Imports: methods, stats, utils
 Suggests: lme4, compare, foreign, stringr, psych, lawstat, openxlsx, qgraph, DT
 License: GPL-2
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
