@@ -26,7 +26,7 @@ fa2xlsx<-function(...,cut=0.3,cut.diff=0.1,order.items="factor", original.factor
 fa2DT<-function(...,cut=0.3,cut.diff=0.1,order.items="factor", original.factors=NULL) {
   fs<-fa2structure(list(...), cut=cut,cut.diff=cut.diff,order.items = order.items,original.factors = original.factors)
   res<-lapply(fs,function(x) {
-    fac.dt<-DT::datatable(x$loads,caption = x$f)
+    fac.dt<-DT::datatable(x$loads,caption = x$f, options=list(paging=FALSE))
     fac.dt %>%
       DT::formatRound(columns=c(x$factors.names,"difs"), digits=3) %>%
       DT::formatStyle(columns="difs", backgroundColor = DT::styleInterval(cuts=c(cut.diff), values=c("red","white") )) %>%
