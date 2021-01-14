@@ -5,7 +5,3 @@
 \alias{cebn}
 \title{cebn.
 Multiple methods only interesting for me}
-\description{
-cebn.
-Multiple methods only interesting for me
-}

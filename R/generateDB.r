@@ -22,6 +22,7 @@ generateDB<-function(db, def, v='var',ignore=c(),na.rm=TRUE) {
   out.means<-list()
   out.sums<-list()
 
+
   for(i in 1:length(escalas)) {
     sel<-def.2[,i]
 
@@ -34,11 +35,14 @@ generateDB<-function(db, def, v='var',ignore=c(),na.rm=TRUE) {
     # print(ind)
     #print(v.act)
     if(length(v.act)>0) {
-      #print(v.act)
       n.vars<-length(v.act)
+      col.presentes<-v.act %in% colnames(db)
+      if(any(!col.presentes )) {
+        stop("Hay columnas en la definición de ",escalas[i]," que no están en la base: ", paste0(v.act[!col.presentes], collapse=" ,"))
+      }
       out.db[[ escalas[i] ]]<-db[,v.act,drop=F]
      # print(str(db[,v.act]))
-      if(any(ind<0)) {
+      if(any(ind < 0)) {
         for(j in which(ind<0)) {
           out.db[[ escalas[i] ]][,j]<- -ind[j] - out.db[[ escalas[i] ]][,j]
         }
@@ -78,5 +82,5 @@ def.var.to.keys<-function(x,v="var") {
   keys<-x[,colnames(x)!="var"]
   rownames(keys)<-item.names
   keys[is.na(keys)]<-0
-  keys[rowSums(keys)>0,]
+  keys[rowSums(abs(keys))>0,]
 }

@@ -31,3 +31,23 @@ corAsPsych<-function(x,delete.lower=T, round.digits=2,...) {
   }
   data.frame(out)
 }
+
+
+# Esto fue culpa de Pablo Vergara.
+
+corAsPsych.mi<-function(x, variables=colnames(complete(x)), round.digits=2) {
+cors.m<-micombine.cor(x,variables = variables)
+val.r<-matrix(1, length(lista.vars), length(lista.vars), dimnames = list(lista.vars, lista.vars))
+val.p<-matrix(NA, length(lista.vars), length(lista.vars), dimnames = list(lista.vars, lista.vars))
+for(i in 1:nrow(cors.m)) {
+  var1<-cors.m[i, "variable1"]  
+  var2<-cors.m[i, "variable2"]
+  vr<-cors.m[i, "r"]
+  vp<-cors.m[i, "p"]
+  val.r[var1,var2]<-val.r[var2,var1]<-vr
+  val.p[var1,var2]<-val.p[var2,var1]<-vp
+}
+val.p2<-stars.pval(val.p)
+do.call(cbind, lapply(1:ncol(val.r), function(i) {data.frame(r=round(val.r[,i],2), p=val.p2[,i])}))
+}
+

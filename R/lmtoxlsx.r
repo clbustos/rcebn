@@ -62,8 +62,8 @@ lmToXlsx<-function(x,nested=T) {
       writeData(wb,sheet=1, round(dr2,3),startCol=column+1,startRow=3+minrow+4)
 
       writeData(wb,sheet=1, "d F",startCol=column,startRow=3+minrow+5)
-      writeData(wb,sheet=1, round(an1[2,5],3),startCol=column+1,startRow=3+minrow+5)
-      writeData(wb,sheet=1, ast.valor.p(an1[2,6]),startCol=column+3,startRow=3+minrow+3)
+      writeData(wb,sheet=1, round(an1[2,5],3),     startCol=column+1,startRow=3+minrow+5)
+      writeData(wb,sheet=1, ast.valor.p(an1[2,6]), startCol=column+2,startRow=3+minrow+5)
     }
     r2.pre<-summary(lm.i)$r.squared
     mod.pre<-lm.i

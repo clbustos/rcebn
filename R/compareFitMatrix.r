@@ -6,7 +6,7 @@
 #' @param srmr.field x
 #' @return a data.frame
 #' @export
-compareFitMatrix<-function(mods,method=NULL,scaled=F,nested=T,srmr.field="srmr") {
+compareFitMatrix<-function(mods,method=NULL,scaled=F,nested=T, srmr.field="srmr") {
   if(scaled & is.null(method)) {
     method="satorra.2000"
   }

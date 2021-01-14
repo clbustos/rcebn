@@ -43,7 +43,11 @@ ros<-function(model,predictor,moderador,points=NULL,simple_slopes=NULL,alpha=0.0
   v.y10<-v[predictor,predictor]
   v.y01<-v[moderador,moderador]
   c.y10.y11<-v[predictor,inter]
-  t.crit<-qt(1-(alpha/2),n)
+  df<-df.residual(model)
+  # Los grados de libertad lo saque de interactions::johnson_neyman
+  # También están en https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3203541/ como n-4
+  # que se entiende porque son n-constante-f1-f2-int
+  t.crit<-qt(1-(alpha/2),df)
   i.n<-"(Intercept)"
   # Ordered Variance/Covariance matrix
   vcv.o<-matrix(
