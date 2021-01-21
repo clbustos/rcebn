@@ -1,6 +1,6 @@
 Package: cebn
 Title: Multiple methods for psychologist
-Version: 0.2
+Version: 0.2.1
 Authors@R: c(person("Claudio Bustos", "Developer", role = c("aut", "cre"),
     email = "clbustos_at_gmail_dot_com"))
 Maintainer: Claudio Bustos <clbustos@gmail.com>
