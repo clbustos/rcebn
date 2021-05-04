@@ -35,19 +35,35 @@ corAsPsych<-function(x,delete.lower=T, round.digits=2,...) {
 
 # Esto fue culpa de Pablo Vergara.
 
-corAsPsych.mi<-function(x, variables=colnames(complete(x)), round.digits=2) {
-cors.m<-micombine.cor(x,variables = variables)
-val.r<-matrix(1, length(lista.vars), length(lista.vars), dimnames = list(lista.vars, lista.vars))
-val.p<-matrix(NA, length(lista.vars), length(lista.vars), dimnames = list(lista.vars, lista.vars))
-for(i in 1:nrow(cors.m)) {
-  var1<-cors.m[i, "variable1"]  
-  var2<-cors.m[i, "variable2"]
-  vr<-cors.m[i, "r"]
-  vp<-cors.m[i, "p"]
-  val.r[var1,var2]<-val.r[var2,var1]<-vr
-  val.p[var1,var2]<-val.p[var2,var1]<-vp
-}
-val.p2<-stars.pval(val.p)
-do.call(cbind, lapply(1:ncol(val.r), function(i) {data.frame(r=round(val.r[,i],2), p=val.p2[,i])}))
+corAsPsych.mi<-function(x, variables=colnames(complete(x)), round.digits=2, only.r=FALSE) {
+  cors.m<-miceadds::micombine.cor(x,variables = variables)
+  cors.m$variable1<-as.character(cors.m$variable1)
+  cors.m$variable2<-as.character(cors.m$variable2)
+  
+  val.r<-matrix(1, length(variables), length(variables), dimnames = list(variables, variables))
+  val.p<-matrix(NA, length(variables), length(variables), dimnames = list(variables, variables))
+  for(i in 1:nrow(cors.m)) {
+    var1<-cors.m[i, "variable1"]  
+    var2<-cors.m[i, "variable2"]
+    
+    vr<-cors.m[i, "r"]
+    vp<-cors.m[i, "p"]
+  #  cat("Var1:",var1,". var2:", var2, ".r:", vr,"\n")
+    val.r[var1,var2]<-vr
+    val.r[var2,var1]<-vr
+    val.p[var1,var2]<-vp
+    val.p[var2,var1]<-vp
+  }
+  
+  if(only.r) {
+    return(val.r)
+  } else {
+  val.p2<-gtools::stars.pval(val.p)
+  do.call(cbind, lapply(1:ncol(val.r), function(i) {
+    res.1<-data.frame(r=round(val.r[,i],2), p=val.p2[,i])
+    colnames(res.1)<-paste0(variables[i], c(".r",".p"))
+    res.1
+    }))
+  }
 }
 
