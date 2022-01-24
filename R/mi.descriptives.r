@@ -1,4 +1,4 @@
-#' Calcular las medias, desviaciones estándar e intervalos de confianza, considerando la existencia de datos perdidos
+#' Calculate mean, standard deviation, means' confidence intervales for missing data
 #' @export
 #' @importFrom stats cor var
 mi.descriptives<-function(mi,subset=1:nrow(mice::complete(mi)), FUN=I, variables=1:ncol(FUN(mice::complete(mi))) ) {
@@ -6,7 +6,7 @@ mi.descriptives<-function(mi,subset=1:nrow(mice::complete(mi)), FUN=I, variables
   if(is.logical(subset)) {
     subset<-which(subset)
   }
-  names.v<-names(FUN(complete(mi)))[variables]
+  names.v<-names(FUN(mice::complete(mi)))[variables]
   n<-length(subset)
   k<-length(variables)
   means<-matrix(0,m,k)

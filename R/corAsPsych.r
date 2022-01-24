@@ -33,7 +33,7 @@ corAsPsych<-function(x,delete.lower=T, round.digits=2,...) {
 }
 
 
-# Esto fue culpa de Pablo Vergara.
+# Esto fue culpa de Pablo Vergara (gracias, Pablo)
 
 corAsPsych.mi<-function(x, variables=colnames(complete(x)), round.digits=2, only.r=FALSE) {
   cors.m<-miceadds::micombine.cor(x,variables = variables)

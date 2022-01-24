@@ -12,9 +12,10 @@
 #'                    three or more groups
 #' @param test.type "variable" for contingent on normality test, "parametric" for
 #'                  t and ANOVA and "nonparametric" for U and Kruskall-Wallis
+#' @param show.n    show the size of each groups
 #' @importFrom stats wilcox.test t.test anova aov kruskal.test lm aggregate sd shapiro.test
 #' @export
-compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FALSE, test.type="variable") {
+compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FALSE, test.type="variable", show.n=TRUE) {
   g<-factor(g)
   # Factor by factor...
   if(any(is.na(g))) {
@@ -25,10 +26,16 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
   }
   n.g<-length(levels(g))
   k<-ncol(vars)
-
+  # Number of columns by group
+  cpg<-2+1*show.n
+  
   #var.names<-colnames(vars)
-  out.desc<-matrix(0,k,n.g*3)
-  colnames(out.desc)<-paste0(paste0(gl(n.g,3,labels=levels(g)),   rep(c(".n",".M",".DE"),n.g)))
+  out.desc<-matrix(0,k,n.g*cpg)
+  if(show.n) {
+    colnames(out.desc)<-paste0(paste0(gl(n.g,3,labels=levels(g)),   rep(c(".n",".M",".DE"),n.g)))
+  } else {
+    colnames(out.desc)<-paste0(paste0(gl(n.g,2,labels=levels(g)),   rep(c(".M",".DE"),n.g)))
+  }
   test.var<-character(k)
   p.values<-numeric(k)
   es<-numeric(k)
@@ -49,10 +56,19 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
       }
       })$x
     }
-    out.desc[i,seq(1,n.g*3,3)]<-x.n
-    out.desc[i,seq(2,n.g*3,3)]<-x.m
-    out.desc[i,seq(3,n.g*3,3)]<-x.sd
+    
+    if(show.n) {
+    
+		out.desc[i,seq(1,n.g*cpg,cpg)]<-x.n
+		out.desc[i,seq(2,n.g*cpg,cpg)]<-x.m
+		out.desc[i,seq(3,n.g*cpg,cpg)]<-x.sd
 
+    } else {
+      
+      out.desc[i,seq(1,n.g*cpg,cpg)]<-x.m
+      out.desc[i,seq(2,n.g*cpg,cpg)]<-x.sd
+      
+    }
     all.normals<-all(x.st)
 
 
