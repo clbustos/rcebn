@@ -55,13 +55,15 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
         NA
       }
       })$x
+    } else {
+      x.st<-NULL
     }
     
     if(show.n) {
-    
-		out.desc[i,seq(1,n.g*cpg,cpg)]<-x.n
-		out.desc[i,seq(2,n.g*cpg,cpg)]<-x.m
-		out.desc[i,seq(3,n.g*cpg,cpg)]<-x.sd
+      
+  		out.desc[i,seq(1,n.g*cpg,cpg)]<-x.n
+  		out.desc[i,seq(2,n.g*cpg,cpg)]<-x.m
+  		out.desc[i,seq(3,n.g*cpg,cpg)]<-x.sd
 
     } else {
       

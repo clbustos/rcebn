@@ -2,7 +2,7 @@ Package: cebn
 Title: Multiple methods for psychologist
 Version: 0.2.1
 Authors@R: c(person("Claudio Bustos", "Developer", role = c("aut", "cre"),
-    email = "clbustos_at_gmail_dot_com"))
+    email = "clbustos@gmail.com"))
 Maintainer: Claudio Bustos <clbustos@gmail.com>
 Description: Miscellaneous stuff useful for data analysis, mainly psichology.
 Encoding: UTF-8

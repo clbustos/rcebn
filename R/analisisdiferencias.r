@@ -18,11 +18,16 @@ analisisDiferencias <-
     reporte <- list()
     if (is.vector(vars.report)) {
       reporte$ID <- vars.report
+      report_id<-"ID"
     } else {
       for (i in 1:ncol(vars.report)) {
         reporte[[paste0("ID.", i)]] <- vars.report[, i]
       }
+      report_id<-paste0("ID.", 1:ncol(vars.report))
     }
+    
+    # delete id variables in vars.rel
+    vars.rel<-setdiff(vars.rel, report_id)
     reporte$problemas <- character(n)
     casos.problemas <- numeric()
     var.problema <- c()

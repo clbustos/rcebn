@@ -5,8 +5,9 @@
 #' @param points Matrix, with first columns values for predictor and second for moderator
 #' @param simple_slopes Vector with moderator values
 #' @param alpha Level of significance for test
+#' @param f.test F-test is valid for all points. If false, t.test would test for one specific point  
 #' @export
-ros<-function(model,predictor,moderador,points=NULL,simple_slopes=NULL,alpha=0.05) {
+ros<-function(model,predictor,moderador,points=NULL,simple_slopes=NULL,alpha=0.05, f.test=T) {
   v<-vcov(model)
   if(class(model)=="lm") {
     ef<-coef(model)
@@ -47,7 +48,13 @@ ros<-function(model,predictor,moderador,points=NULL,simple_slopes=NULL,alpha=0.0
   # Los grados de libertad lo saque de interactions::johnson_neyman
   # También están en https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3203541/ como n-4
   # que se entiende porque son n-constante-f1-f2-int
-  t.crit<-qt(1-(alpha/2),df)
+  
+  if(f.test) {
+    t.crit<-qf(1-alpha, 1, df)
+  } else {
+    t.crit<-qt(1-(alpha/2),df)
+  }
+  print(t.crit)
   i.n<-"(Intercept)"
   # Ordered Variance/Covariance matrix
   vcv.o<-matrix(
