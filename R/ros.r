@@ -54,7 +54,7 @@ ros<-function(model,predictor,moderador,points=NULL,simple_slopes=NULL,alpha=0.0
   } else {
     t.crit<-qt(1-(alpha/2),df)
   }
-  print(t.crit)
+  #print(t.crit)
   i.n<-"(Intercept)"
   # Ordered Variance/Covariance matrix
   vcv.o<-matrix(
