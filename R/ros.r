@@ -7,7 +7,7 @@
 #' @param alpha Level of significance for test
 #' @param f.test F-test is valid for all points. If false, t.test would test for one specific point  
 #' @export
-ros<-function(model,predictor,moderador,points=NULL,simple_slopes=NULL,alpha=0.05, f.test=T) {
+ros<-function(model,predictor,moderador,points=NULL,simple_slopes=NULL,alpha=0.05) {
   v<-vcov(model)
   if(class(model)=="lm") {
     ef<-coef(model)
@@ -49,11 +49,7 @@ ros<-function(model,predictor,moderador,points=NULL,simple_slopes=NULL,alpha=0.0
   # También están en https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3203541/ como n-4
   # que se entiende porque son n-constante-f1-f2-int
   
-  if(f.test) {
-    t.crit<-qf(1-alpha, 1, df)
-  } else {
-    t.crit<-qt(1-(alpha/2),df)
-  }
+  t.crit<-(qt(1-(alpha/2),df))^2
   #print(t.crit)
   i.n<-"(Intercept)"
   # Ordered Variance/Covariance matrix
@@ -68,11 +64,11 @@ ros<-function(model,predictor,moderador,points=NULL,simple_slopes=NULL,alpha=0.0
 
   #t.crit<-1.96
 
-  a1<-t.crit^2 * v.y11 - f.y11^2
+  a1<-t.crit * v.y11 - f.y11^2
 
-  b1<- 2 * ( t.crit^2* c.y10.y11-f.y10*f.y11)
+  b1<- 2 * ( t.crit* c.y10.y11-f.y10*f.y11)
 
-  c1<-t.crit^2*v.y10-f.y10^2
+  c1<-t.crit*v.y10-f.y10^2
   #cat("a:",a1," b:",b1," c:",c1,"\n")
   r1<- (-b1 - sqrt(b1^2-4*a1*c1))/(2*a1)
   r2<- (-b1 + sqrt(b1^2-4*a1*c1))/(2*a1)
