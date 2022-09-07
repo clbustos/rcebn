@@ -97,9 +97,9 @@ fa2xlsx.wb<-function(x,cut=0.3,cut.diff=0.1,order.items="factor", original.facto
   openxlsx::addWorksheet(wb, "fa")
   sc=1
   s <- createStyle(numFmt = "0.00")
-  negStyle <- createStyle(fontColour = "#330000", fgFill = "#FF6666")
-  posStyle <- createStyle(fontColour = "#003300", fgFill = "#66FF66")
-  errStyle <- createStyle(fontColour = "#330033", fgFill = "#FF66FF")
+  negStyle <- createStyle(fontColour = "#330000", bgFill = "#FF6666")
+  posStyle <- createStyle(fontColour = "#003300", bgFill = "#66FF66")
+  errStyle <- createStyle(fontColour = "#330033", bgFill = "#FF66FF")
 
 
   structure<-fa2structure(x=x,cut=cut,cut.diff = cut.diff, order.items = order.items, original.factors = original.factors)
