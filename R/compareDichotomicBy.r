@@ -59,7 +59,7 @@ cramer<-function (tab)
         p.values[i]<-tt$p.value
     } else {
         tt<-fisher.test(tab);
-        test.var[i]<-"Exacto de Fisher"
+        test.var[i]<-"Fisher exact test"
         p.values[i]<-tt$p.value
 
     }
