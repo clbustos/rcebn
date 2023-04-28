@@ -1,6 +1,7 @@
 #' Returns a data.frame with correlations like the psych uses
 #' @param x a data.frame
 #' @param delete.lower if should delete the lower diagonal
+#' @param ... other params, passed to corr.test
 #' @export
 corAsPsych<-function(x,delete.lower=T, round.digits=2,...) {
   c.m<-psych::corr.test(x,...)

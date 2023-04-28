@@ -109,14 +109,24 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
       es[i]<-abs(x.m[1]-x.m[2])/pool.sd
     } else {
       if(use.3.eta2) {
-      es.name="ES(eta²)"
+		es.name="ES(eta²)"
       } else {
-      es.name="ES(f)"
+		es.name="ES(f)"
       }
+      
+      ## CORREGIR LOGICA
+      
       if(is.na(all.normals)) {
+        if(test.type!="parametric") {
+			tt<-kruskal.test(vars[,i]~g)
+          test.var[i]<-sprintf("X²(%d)=%0.2f",tt$parameter,tt$statistic)
+          p.values[i]<-tt$p.value
+		} else {
+        
         test.var[i]<-NA
         p.values[i]<-NA
         es[i]<-NA
+	}
       } else {
         if(test.type=='parametric' || (test.type=="variable" && all.normals)) {
           tt<-anova(aov(vars[,i]~g));
@@ -129,6 +139,9 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
           test.var[i]<-sprintf("X²(%d)=%0.2f",tt$parameter,tt$statistic)
           p.values[i]<-tt$p.value
         }
+        
+        
+        
         if(use.3.eta2) {
           es[i]<-summary(lm(vars[,i]~g))$r.squared
         } else {
