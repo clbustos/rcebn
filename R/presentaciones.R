@@ -18,7 +18,7 @@ presentar.kmo.bartlett<-function(x, n=NULL, policorica=FALSE) {
   } else {
     bar<-cortest.bartlett(x1 ,  n=n)
   }
-  pander::pandoc.p(c("The result of KMO=", round(kmo$MSA,2) , " and Bartlet test, ",sprintf("X²(%d) = %0.3f, p=%s", bar$df,bar$chisq, format.pval(bar$p.value,eps = 0.001)), " shows that correlation matrix is adequate for exploratory factorial analysis.\n"))
+  pander::pandoc.p(c("The result of KMO=", round(kmo$MSA,2) , " and Bartlet test, ",sprintf("X^2(%d) = %0.3f, p=%s", bar$df,bar$chisq, format.pval(bar$p.value,eps = 0.001)), " shows that correlation matrix is adequate for exploratory factorial analysis.\n"))
   pander::pandoc.table(kmo$MSAi,"Individual MSA")
 }
 
