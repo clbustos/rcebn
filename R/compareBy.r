@@ -109,7 +109,7 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
       es[i]<-abs(x.m[1]-x.m[2])/pool.sd
     } else {
       if(use.3.eta2) {
-		es.name="ES(eta²)"
+		es.name="ES(eta^2)"
       } else {
 		es.name="ES(f)"
       }
@@ -119,7 +119,7 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
       if(is.na(all.normals)) {
         if(test.type!="parametric") {
 			tt<-kruskal.test(vars[,i]~g)
-          test.var[i]<-sprintf("X²(%d)=%0.2f",tt$parameter,tt$statistic)
+          test.var[i]<-sprintf("X^2(%d)=%0.2f",tt$parameter,tt$statistic)
           p.values[i]<-tt$p.value
 		} else {
         
@@ -136,7 +136,7 @@ compareBy<-function(vars,g,varnames=colnames(vars),use.2.bm=FALSE,use.3.eta2=FAL
           p.values[i]<-tt$"Pr(>F)"[1]
         } else {
           tt<-kruskal.test(vars[,i]~g)
-          test.var[i]<-sprintf("X²(%d)=%0.2f",tt$parameter,tt$statistic)
+          test.var[i]<-sprintf("X^2(%d)=%0.2f",tt$parameter,tt$statistic)
           p.values[i]<-tt$p.value
         }
         
