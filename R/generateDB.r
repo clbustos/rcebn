@@ -38,7 +38,7 @@ generateDB<-function(db, def, v='var',ignore=c(),na.rm=TRUE) {
       n.vars<-length(v.act)
       col.presentes<-v.act %in% colnames(db)
       if(any(!col.presentes )) {
-        stop("Hay columnas en la definición de ",escalas[i]," que no están en la base: ", paste0(v.act[!col.presentes], collapse=" ,"))
+        stop("There are columns in the definition of ",escalas[i]," that are not included in dataframe: ", paste0(v.act[!col.presentes], collapse=" ,"))
       }
       out.db[[ escalas[i] ]]<-db[,v.act,drop=F]
      # print(str(db[,v.act]))
