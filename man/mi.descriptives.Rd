@@ -2,7 +2,7 @@
 % Please edit documentation in R/mi.descriptives.r
 \name{mi.descriptives}
 \alias{mi.descriptives}
-\title{Calcular las medias, desviaciones estándar e intervalos de confianza, considerando la existencia de datos perdidos}
+\title{Calculate mean, standard deviation, means' confidence intervales for missing data}
 \usage{
 mi.descriptives(
   mi,
@@ -12,5 +12,5 @@ mi.descriptives(
 )
 }
 \description{
-Calcular las medias, desviaciones estándar e intervalos de confianza, considerando la existencia de datos perdidos
+Calculate mean, standard deviation, means' confidence intervales for missing data
 }

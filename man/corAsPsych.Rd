@@ -10,6 +10,8 @@ corAsPsych(x, delete.lower = T, round.digits = 2, ...)
 \item{x}{a data.frame}
 
 \item{delete.lower}{if should delete the lower diagonal}
+
+\item{...}{other params, passed to corr.test}
 }
 \description{
 Returns a data.frame with correlations like the psych uses

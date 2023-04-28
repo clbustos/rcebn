@@ -16,7 +16,8 @@ compareBy(
   varnames = colnames(vars),
   use.2.bm = FALSE,
   use.3.eta2 = FALSE,
-  test.type = "variable"
+  test.type = "variable",
+  show.n = TRUE
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ compareBy(
 
 \item{test.type}{"variable" for contingent on normality test, "parametric" for
 t and ANOVA and "nonparametric" for U and Kruskall-Wallis}
+
+\item{show.n}{show the size of each groups}
 
 \item{use.2.bm:}{Use brunner.munzel.test on variables with two groups}
 

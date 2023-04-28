@@ -25,6 +25,8 @@ ros(
 \item{alpha}{Level of significance for test}
 
 \item{lm}{or lmer model}
+
+\item{f.test}{F-test is valid for all points. If false, t.test would test for one specific point}
 }
 \description{
 Region of significance analysis
