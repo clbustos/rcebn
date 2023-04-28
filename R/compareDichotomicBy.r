@@ -55,7 +55,7 @@ cramer<-function (tab)
     tab<-table(v==success,g)
     if(min(tab)>5) {
         tt<-chisq.test(tab);
-        test.var[i]<-sprintf("X²(%0.1f) = %0.2f",tt$parameter,abs(tt$statistic))
+        test.var[i]<-sprintf("X^2(%0.1f) = %0.2f",tt$parameter,abs(tt$statistic))
         p.values[i]<-tt$p.value
     } else {
         tt<-fisher.test(tab);
