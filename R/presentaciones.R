@@ -18,8 +18,8 @@ presentar.kmo.bartlett<-function(x, n=NULL, policorica=FALSE) {
   } else {
     bar<-cortest.bartlett(x1 ,  n=n)
   }
-  pander::pandoc.p(c("El resultado de KMO=", round(kmo$MSA,2) , " y de la prueba de Bartlett, ",sprintf("X²(%d) = %0.3f, p=%s", bar$df,bar$chisq, format.pval(bar$p.value,eps = 0.001)), " muestra que la matriz de correlaciones es apta para el análisis factorial exploratorio.\n"))
-  pander::pandoc.table(kmo$MSAi,"MSA individuales")
+  pander::pandoc.p(c("The result of KMO=", round(kmo$MSA,2) , " and Bartlet test, ",sprintf("X²(%d) = %0.3f, p=%s", bar$df,bar$chisq, format.pval(bar$p.value,eps = 0.001)), " shows that correlation matrix is adequate for exploratory factorial analysis.\n"))
+  pander::pandoc.table(kmo$MSAi,"Individual MSA")
 }
 
 
@@ -33,22 +33,22 @@ presentar.cfa<-function(x, scaled=TRUE) {
   library(magrittr)
   ss<-standardizedsolution(x)
   ss<-ss[ss$op %in% c("=~","~~"), ]
-  pander::pandoc.table(cebn::compareFitMatrix(list(x),scaled = scaled,nested=F), "Indices de ajuste")
-  pander::pandoc.table(ss, "Solución estandarizada")
-  pander::pandoc.table(modificationindices(x,sort.=T,maximum.number = 10),"Indices de modificación")
+  pander::pandoc.table(cebn::compareFitMatrix(list(x),scaled = scaled,nested=F), "Model fit indices")
+  pander::pandoc.table(ss, "Standarized solution")
+  pander::pandoc.table(modificationindices(x,sort.=T,maximum.number = 10),"Modification indices")
   if(!lavInspect(x,"post.check")) {
-    pander::pandoc.p(pandoc.strong("El modelo presentó problemas."))
+    pander::pandoc.p(pandoc.strong("There are some errors in the model that need to be fixed."))
     var.neg<-parameterestimates(x) %>% filter(op=="~~" & lhs==rhs & est<0)
     if(nrow(var.neg)>0) {
-      pander::pandoc.table(var.neg,"Varianzas negativas")
+      pander::pandoc.table(var.neg,"Negative variances")
     } else {
-      pander::pandoc.p("No hay varianzas negativas")
+      pander::pandoc.p("There are not negative variances")
     }
     cor.lv<-lavInspect(x,"cor.lv")
     bad.cor<-cor.smoother(cor.lv)$bad
     if(!is.null(bad.cor)) {
-      pander::pandoc.table(cor.lv,"Matriz de correlaciones latentes")
-      pander::pandoc.table(bad.cor, "Variables que generan problemas en matriz ")
+      pander::pandoc.table(cor.lv,"Matrix of latent correlations")
+      pander::pandoc.table(bad.cor, "Variables that generate problems in matrix")
     }
   }
 
