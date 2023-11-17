@@ -35,7 +35,7 @@ presentar.cfa<-function(x, scaled=TRUE) {
   ss<-ss[ss$op %in% c("=~","~~"), ]
   pander::pandoc.table(cebn::compareFitMatrix(list(x),scaled = scaled,nested=F), "Model fit indices")
   pander::pandoc.table(ss, "Standarized solution")
-  pander::pandoc.table(modificationindices(x,sort.=T,maximum.number = 10),"Modification indices")
+  try(pander::pandoc.table(modificationindices(x,sort.=T,maximum.number = 10),"Modification indices"))
   if(!lavInspect(x,"post.check")) {
     pander::pandoc.p(pandoc.strong("There are some errors in the model that need to be fixed."))
     var.neg<-parameterestimates(x) %>% filter(op=="~~" & lhs==rhs & est<0)
@@ -48,7 +48,9 @@ presentar.cfa<-function(x, scaled=TRUE) {
     bad.cor<-cor.smoother(cor.lv)$bad
     if(!is.null(bad.cor)) {
       pander::pandoc.table(cor.lv,"Matrix of latent correlations")
-      pander::pandoc.table(bad.cor, "Variables that generate problems in matrix")
+      if(length(bad.cor)>0) {
+        try(pander::pandoc.table(bad.cor, "Variables that generate problems in matrix"))
+      }
     }
   }
 

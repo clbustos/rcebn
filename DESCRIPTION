@@ -1,6 +1,6 @@
 Package: cebn
 Title: Multiple methods for psychologist
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: c(person("Claudio Bustos", "Developer", role = c("aut", "cre"),
     email = "clbustos@gmail.com"))
 Maintainer: Claudio Bustos <clbustos@gmail.com>
@@ -11,4 +11,4 @@ Imports: methods, stats, utils
 Suggests: lme4, compare, foreign, stringr, psych, lawstat, openxlsx, qgraph, DT
 License: GPL-2
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
