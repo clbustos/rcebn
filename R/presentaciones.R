@@ -31,6 +31,8 @@ presentar.kmo.bartlett<-function(x, n=NULL, policorica=FALSE) {
 presentar.cfa<-function(x, scaled=TRUE) {
   library(dplyr)
   library(magrittr)
+  library(lavaan)
+  library(pander)
   ss<-standardizedsolution(x)
   ss<-ss[ss$op %in% c("=~","~~"), ]
   pander::pandoc.table(cebn::compareFitMatrix(list(x),scaled = scaled,nested=F), "Model fit indices")
